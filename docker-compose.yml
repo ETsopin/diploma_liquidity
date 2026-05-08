@@ -1,0 +1,91 @@
+services:
+  # -------------------------------------------------------
+  # Основная база данных системы (DWH + staging + витрины)
+  # -------------------------------------------------------
+  dwh_db:
+    image: postgres:15
+    container_name: liquidity_dwh
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DWH_DB_NAME:-liquidity_dwh}
+      POSTGRES_USER: ${DWH_DB_USER:-dwh_user}
+      POSTGRES_PASSWORD: ${DWH_DB_PASSWORD:-dwh_password}
+    ports:
+      - "5434:5432"
+    volumes:
+      - dwh_data:/var/lib/postgresql/data
+      - ./db/dwh/migrations:/docker-entrypoint-initdb.d:ro
+    networks:
+      - liquidity_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DWH_DB_USER:-dwh_user} -d ${DWH_DB_NAME:-liquidity_dwh}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------
+  # Имитация банковской АБС (источник сырых данных)
+  # -------------------------------------------------------
+  source_db:
+    image: postgres:15
+    container_name: liquidity_source_abs
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${SOURCE_DB_NAME:-bank_abs}
+      POSTGRES_USER: ${SOURCE_DB_USER:-abs_user}
+      POSTGRES_PASSWORD: ${SOURCE_DB_PASSWORD:-abs_password}
+    ports:
+      - "5435:5432"
+    volumes:
+      - source_data:/var/lib/postgresql/data
+      - ./db/source_abs:/docker-entrypoint-initdb.d:ro
+    networks:
+      - liquidity_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SOURCE_DB_USER:-abs_user} -d ${SOURCE_DB_NAME:-bank_abs}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------
+  # REST API (FastAPI) — интерфейс для фронтенда
+  # -------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: liquidity_api
+    restart: unless-stopped
+    depends_on:
+      dwh_db:
+        condition: service_healthy
+      source_db:
+        condition: service_healthy
+    environment:
+      DWH_DB_HOST: dwh_db
+      DWH_DB_PORT: 5432
+      DWH_DB_NAME: ${DWH_DB_NAME:-liquidity_dwh}
+      DWH_DB_USER: ${DWH_DB_USER:-dwh_user}
+      DWH_DB_PASSWORD: ${DWH_DB_PASSWORD:-dwh_password}
+      SOURCE_DB_HOST: source_db
+      SOURCE_DB_PORT: 5432
+      SOURCE_DB_NAME: ${SOURCE_DB_NAME:-bank_abs}
+      SOURCE_DB_USER: ${SOURCE_DB_USER:-abs_user}
+      SOURCE_DB_PASSWORD: ${SOURCE_DB_PASSWORD:-abs_password}
+      SECRET_KEY: ${SECRET_KEY:-change_me_in_production}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      REPORTS_OUTPUT_DIR: /app/data/reports
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    networks:
+      - liquidity_net
+
+volumes:
+  dwh_data:
+  source_data:
+
+networks:
+  liquidity_net:
+    driver: bridge
