@@ -56,7 +56,7 @@ async def run_etl(body: ETLRunRequest) -> ETLRunResponse:
         source=body.source,
         report_date=report_date,
         assets_loaded=result.assets_loaded,
-        liabs_loaded=result.liabs_loaded,
+        liabs_loaded=result.liabilities_loaded,
         started_at=result.started_at,
         finished_at=result.finished_at,
         error=result.error,
