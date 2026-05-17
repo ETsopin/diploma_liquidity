@@ -1,0 +1,87 @@
+{
+  "1.1": {
+    "name": "Очистка данных (Transformer._clean)",
+    "status": "ПРОЙДЕН",
+    "detail": "На выходе 1 корректная запись; строки с amount=0 и contract_number=None исключены"
+  },
+  "1.2": {
+    "name": "Нормализация кода валюты (Transformer._clean)",
+    "status": "ПРОЙДЕН",
+    "detail": "currency='usd' нормализован к 'USD'; остальные атрибуты не изменились"
+  },
+  "1.3": {
+    "name": "Определение временной корзины (ReferenceCache.timebucket_id)",
+    "status": "ПРОЙДЕН",
+    "detail": "15 дней→D8_30; DEPOSIT_DEMAND без даты→ON_DEMAND; 400 дней→OVER_1Y"
+  },
+  "1.4": {
+    "name": "Расчёт разрыва ликвидности (GapCalculator.calculate)",
+    "status": "ПРОЙДЕН",
+    "detail": "total_assets=1 000 000; total_liabilities=800 000; gap=200 000 руб."
+  },
+  "1.5": {
+    "name": "Накопленный разрыв нарастающим итогом (GapCalculator)",
+    "status": "ПРОЙДЕН",
+    "detail": "D1: gap=500 000, cumulative=500 000; D2_7: gap=-200 000, cumulative=300 000 руб."
+  },
+  "1.6": {
+    "name": "Расчёт доли концентрации (ConcentrationCalculator._calc_shares)",
+    "status": "ПРОЙДЕН",
+    "detail": "GAZP=50.0%, SBER=30.0%, PHYS1=20.0%; сумма долей=100.0%"
+  },
+  "1.7": {
+    "name": "Генерация отчёта в формате Excel",
+    "status": "ПРОЙДЕН",
+    "detail": "Файл .xlsx создан (5117 байт); содержит 3 строки данных; gap для D8_30=200 000 руб."
+  },
+  "2.1": {
+    "name": "Извлечение данных из PostgreSQL АБС и загрузка в Staging",
+    "status": "ПРОЙДЕН",
+    "detail": "2 записи загружены в staging; batch id=1 получил статус 'success'; raw_data содержит атрибуты контракта"
+  },
+  "2.2": {
+    "name": "Извлечение данных из Excel-файлов и загрузка в Staging",
+    "status": "ПРОЙДЕН",
+    "detail": "2 записи из Excel загружены; 'Кредит корпоративный'→'CREDIT_CORPORATE'; source_system='excel'"
+  },
+  "2.3": {
+    "name": "Трансформация данных Staging → DWH с обогащением справочниками",
+    "status": "ПРОЙДЕН",
+    "detail": "counterparty_id, product_type_id, timebucket_id заполнены; USD пересчитан по курсу 90→108 000 000 руб.; UNKNOWN_CP → is_valid=0"
+  },
+  "2.4": {
+    "name": "Полный расчётный пайплайн (ГЭП + концентрация + витрина)",
+    "status": "ПРОЙДЕН",
+    "detail": "gapresult: 8 строк по всем корзинам; concentrationresult: 2 строк; mart_gap_view: 8 строк; gapcalculation status='success'"
+  },
+  "2.5": {
+    "name": "Генерация отчёта из данных DWH в трёх форматах",
+    "status": "ПРОЙДЕН",
+    "detail": "xlsx: 5117 байт; pdf: 1812 байт; csv: 201 байт; 3 записи в reporttask со статусом 'success'"
+  },
+  "3.1": {
+    "name": "Сквозной процесс формирования отчётности (End-to-End)",
+    "status": "ПРОЙДЕН",
+    "detail": "ETL batch='success'; gapcalculation='success'; reporttask='success'; файл отчёта создан. Полный цикл пройден."
+  },
+  "3.2": {
+    "name": "Отказоустойчивость при недоступности источника PostgreSQL АБС",
+    "status": "ПРОЙДЕН",
+    "detail": "batch id=1 получил статус 'failed'; error_message содержит описание ошибки; staging пуст — DWH не повреждён"
+  },
+  "3.3": {
+    "name": "Идемпотентность расчётного ядра при повторном запуске",
+    "status": "ПРОЙДЕН",
+    "detail": "Первый запуск: 1 строк; второй запуск: 1 строк; дублей нет; DELETE+INSERT работает корректно"
+  },
+  "3.4": {
+    "name": "Корректность параметра отчётной даты через API",
+    "status": "ПРОЙДЕН",
+    "detail": "report_date='2025-03-01' распарсен корректно; все записи dwh_asset содержат report_date=2025-03-01; API возвращает HTTP 200"
+  },
+  "3.5": {
+    "name": "Откат транзакции при аварийном завершении расчётного ядра",
+    "status": "ПРОЙДЕН",
+    "detail": "ROLLBACK выполнен успешно; gapresult пуст (0 строк); gapcalculation status='failed'; данные в БД не повреждены"
+  }
+}
