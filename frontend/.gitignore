@@ -1,0 +1,112 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env.*.local
+.env
+.env.development
+.env.production
+.env.test
+
+# vercel
+.vercel
+
+# docker
+docker-compose.override.yml
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+
+# Optional: Keep the .env files that are committed to the repo
+!.env.example
+!.env.template
+
+# Optional: Next.js build output
+.next
+out
+
+# Optional: Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Optional: Coverage directory used by tools like istanbul
+coverage
+
+# Optional: Dependency directory
+node_modules
+
+# Optional: npm or yarn cache
+.npm
+.yarn
+
+# Optional: TypeScript cache
+*.tsbuildinfo
+
+# Optional: ESLint cache
+.eslintcache
+
+# Optional: Stylelint cache
+.stylelintcache
+
+# Optional: Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional: REPL history
+.node_repl_history
+
+# Optional: Output of 'next build'
+/.next
+
+# Optional: dotenv environment variable files
+.env
+.env.development
+.env.production
+.env.test
+.env*.local
+
+# Optional: Vite / Rollup cache
+.cache
+
+# Optional: Turbo
+.turbo
