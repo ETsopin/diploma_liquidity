@@ -1,9 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, InputAdornment, Stack, Box} from '@mui/material';
-import Image from 'next/image';
 
+import { 
+	Container,
+   	Typography, 
+	TextField, 
+	Button, 
+	InputAdornment, 
+	Stack, 
+	Box,
+	SvgIcon
+} from '@mui/material';
+
+import Logo from '@/components/Logo'
 
 export default function Auth() {
 	const [login, setLogin] = useState<string | null>(null);
@@ -22,13 +32,7 @@ export default function Auth() {
 							alignItems: 'center'
 						}}
 					>
-						<Image
-							src='/logo-dark.png'
-							alt='Company Logo'
-							fill
-							size='64px'
-							style={{ objectFit: 'contain' }}
-						/>
+						<Logo color="on-surface" sx={{fontSize: 64}} />
 					</Box>
 					<Typography variant='h4'>Авторизация</Typography>
 					<Typography variant='subtitle1'>Для начала работы в <b>Liquidity Analytics</b> пройдите процесс авторизации.</Typography>
