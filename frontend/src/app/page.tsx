@@ -23,9 +23,6 @@ export default function Home() {
       });
   }, []);
 
-  if (loading) return <div>Connecting to Core Module .../div>;
-  if (error) return <div>Error: {error}</div>;
-
   return (
     <div>
       <h2>API Response: </h2>
