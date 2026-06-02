@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
 import { 
 	Container,
    	Typography, 
@@ -12,8 +11,10 @@ import {
 	Box,
 	SvgIcon
 } from '@mui/material';
-
 import Logo from '@/components/Logo'
+import LoginIcon from '@mui/icons-material/Login';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LockIcon from '@mui/icons-material/Lock';
 
 export default function Auth() {
 	const [login, setLogin] = useState<string | null>(null);
@@ -37,20 +38,45 @@ export default function Auth() {
 					<Typography variant='h1'>Авторизация</Typography>
 					<Typography variant='subtitle1'>Для начала работы в <b>Liquidity Analytics</b> пройдите процесс авторизации.</Typography>
 				</Stack>
-				<TextField
-					id='login'
-					label='Имя пользователя'
-				>
-				</TextField>
-				<TextField
-					id='password'
-					label='Пароль'
-					type='password'
-				>
-				</TextField>
+				<Stack direction='column' spacing={2}>
+					<TextField
+						id='login'
+						label='Имя пользователя'
+						helperText='Введите имя пользователя'
+						fullwidth
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+									<AccountCircleIcon />
+								</InputAdornment>
+							),
+						}}
+					>
+					</TextField>
+					<TextField
+						id='password'
+						label='Пароль'
+						type='password'
+						helperText='Введите пароль'
+						fullwidth
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+									<LockIcon />
+								</InputAdornment>
+							),
+						}}
+					>
+					</TextField>
+				</Stack>
 				<Button
 				   variant='contained'
 				   size='large'
+				   endIcon={<LoginIcon />}
+				   sx={{
+					   bgcolor: 'inverse.surface',
+					   color: 'inverse.onSurface',
+				   }}
 				>
 					Войти
 				</Button>
