@@ -34,7 +34,7 @@ export default function Auth() {
 					>
 						<Logo color="on-surface" sx={{fontSize: 64}} />
 					</Box>
-					<Typography variant='h4'>Авторизация</Typography>
+					<Typography variant='h1'>Авторизация</Typography>
 					<Typography variant='subtitle1'>Для начала работы в <b>Liquidity Analytics</b> пройдите процесс авторизации.</Typography>
 				</Stack>
 				<TextField
