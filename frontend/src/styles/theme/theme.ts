@@ -596,6 +596,6 @@ export const getDesignTokens = (mode: ThemeMode, contrast: ContrastType = 'norma
 };
 
 // Default Theme
-const theme = createTheme(getDesignTokens('light', 'normal'));
+const theme = createTheme(getDesignTokens('dark', 'normal'));
 
 export default theme;
