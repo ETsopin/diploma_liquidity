@@ -8,6 +8,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/inter-tight';
 
+import Header from '@/components/AppBar/Header';
+import LeftSidebar from '@/components/AppBar/Sidebars'
+import { Stack } from '@mui/material';
+
 export default function RootLayout({ children }) {
 	return (
 		<html>
@@ -18,8 +22,17 @@ export default function RootLayout({ children }) {
 			<body>
 				<AppRouterCacheProvider>
 					<ThemeProvider theme={theme}>
+						<Header />
 						<CssBaseline />
-						{children}
+						<Stack 
+							direction="row"
+							sx = {{
+								justifyContent: "space-between",
+							}}
+						>
+							<LeftSidebar />
+							<LeftSidebar />
+						</Stack>
 					</ThemeProvider>
 				</AppRouterCacheProvider>
 			</body>
