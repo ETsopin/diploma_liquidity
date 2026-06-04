@@ -43,7 +43,6 @@ export default function Auth() {
 						id='login'
 						label='Имя пользователя'
 						helperText='Введите имя пользователя'
-						fullwidth
 						InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">
@@ -58,7 +57,6 @@ export default function Auth() {
 						label='Пароль'
 						type='password'
 						helperText='Введите пароль'
-						fullwidth
 						InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">

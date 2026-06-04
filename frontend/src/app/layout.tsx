@@ -8,6 +8,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/inter-tight';
 
+import Wrapper from '@/components/Layout/Wrapper';
+
+
 export default function RootLayout({ children }) {
 	return (
 		<html>
@@ -17,8 +20,7 @@ export default function RootLayout({ children }) {
 			</head>
 			<body>
 				<AppRouterCacheProvider>
-					<ThemeProvider theme={theme}>
-						<CssBaseline />
+					<ThemeProvider>
 						{children}
 					</ThemeProvider>
 				</AppRouterCacheProvider>
