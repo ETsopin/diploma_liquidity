@@ -1,13 +1,15 @@
 'use client'
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 
 import {
 	Stack,
 	Container,
 	Box,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 import NavIconButton, { NavIconButtonProps } from '@/components/Layout/NavIconButton';
+import { ColorModeContext } from '@/styles/theme/ThemeProvider';
 
 import HomeIcon from '@mui/icons-material/Home';
 import AssigmentIcon from '@mui/icons-material/Assignment';
@@ -19,6 +21,7 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 
 interface SidebarProps {
@@ -83,16 +86,25 @@ export function LeftSidebar() {
 	);
 }
 
-const RIGHT_SIDEBAR_ITEMS: Omit<NavIconButtonProps, 'key'>[] = [
-	{icon: BedtimeIcon, label: "Темная тема", onClick: () => {console.log("theme change")}},
-	{icon: SettingsIcon, label: "Настройки", href: "/settings"},
-	{icon: LogoutIcon, label: "Выход из аккаунта", onClick: () => {console.log("logout")}},
-];
-
 export function RightSidebar(){
+	const { toggleColorMode, mode } = useContext(ColorModeContext);
+	const theme = useTheme();
+
+	const getRightSidebarItems = (): Omit<NavIconButtonProps, 'key'>[] => [
+		{
+			icon: mode === 'dark' ? Brightness7Icon : BedtimeIcon,
+			label: mode === 'dark' ? 'Светлая тема' : 'Темная тема',
+			onClick: toggleColorMode,
+		},
+		{ icon: SettingsIcon, label: "Настройки", href: "/settings" },
+		{ icon: LogoutIcon, label: "Выход из аккаунта", onClick: () => { console.log("logout"); } },
+    ];
+
+	const rightSidebarItems = getRightSidebarItems();
+
 	return (
 		<Sidebar>
-			{RIGHT_SIDEBAR_ITEMS.map((item, index) => (
+			{rightSidebarItems.map((item, index) => (
 				<Box
 					key={index}
 					sx={{
