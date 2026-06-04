@@ -3,7 +3,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://api:8000/api/:path*', // обращение к ядру по имени сервиса
+        destination: 'http://api:8000/:path*', // обращение к ядру по имени сервиса
       },
     ]
   },

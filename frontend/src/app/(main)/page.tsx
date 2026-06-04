@@ -1,5 +1,11 @@
 'use client';
 
+import HealthCheck from '@/components/HealthCheck';
+
 export default function Home() {
-  return (<></>);
+	return(
+		<>
+			<HealthCheck />
+		</>	
+	);
 }
