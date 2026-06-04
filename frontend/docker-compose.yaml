@@ -15,9 +15,9 @@ services:
       - /app/node_modules
       - /app/.next
     networks:
-      - liquidity_net
+      - core_liquidity_net
 
 networks:
-  liquidity_net:
+  core_liquidity_net:
     external: true
-    name: liquidity_net
+    name: core_liquidity_net
