@@ -45,8 +45,8 @@ export default function NavIconButton({
 			color: isActive ? 'tertiary.onTertiaryContainer' : 'text.secondary',
 			backgroundColor: isActive ? 'tertiary.tertiaryContainer' : 'transparent',
 			borderRadius: 2,
-			width: 48,
-			height: 48,
+			width: 36,
+			height: 36,
 			transition: 'all 0.2s ease-in-out',
 			'&:hover': {
 				backgroundColor: 'action.hover',
@@ -61,7 +61,7 @@ export default function NavIconButton({
 	if (badgeCount) {
 		return (
 			<Tooltip title={label} placement={tooltipPlacement}>
-				<Badge badgeContent={badgeCount} color="primary">
+			<Badge badgeContent={badgeCount} color="tertiary">
 					{button}
 				</Badge>
 			</Tooltip>

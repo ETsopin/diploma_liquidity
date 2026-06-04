@@ -10,11 +10,16 @@ import {
 	Avatar,
 } from '@mui/material';
 
+import { useRouter } from 'next/navigation';
+
 import Logo from '@/components/Logo';
-import ListIcon from '@mui/icons-material/List';
+import NavIconButton from '@/components/Layout/NavIconButton'; 
+
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export default function Header() {
+	const router = useRouter();
+
 	function LeftControls() {
 		return (
 			<Stack direction="row">
@@ -24,26 +29,14 @@ export default function Header() {
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
-						width: 72,
+						width: 72
 					}}
 				>
-					<Tooltip title="Главное меню">
-						<IconButton>
-							<ListIcon />
+					<Tooltip title='Liquidity Analytics' placement='right'>
+						<IconButton onClick={()=> {router.push('/')}}>
+							<Logo sx={{fontSize: 36, color: 'text.primary'}}/>
 						</IconButton>
-					</Tooltip> 
-				</Container>
-				<Container 
-					disableGutters
-					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						width: 128,
-					}}
-				>
-					<Logo sx={{fontSize: 48}}/>
-					<Typography variant="h6">Liquidity Analytics</Typography>
+					</Tooltip>
 				</Container>
 			</Stack>
 		);
@@ -63,11 +56,13 @@ export default function Header() {
 						width: 72,
 					}}
 				>
-					<Tooltip title="Уведомления">
-						<IconButton>
-							<NotificationsIcon />
-						</IconButton>
-					</Tooltip> 
+					<NavIconButton
+						icon={NotificationsIcon}
+						label="Уведомления"
+						tooltipPlacement="bottom"
+						onClick={() => {console.log("notification")}}
+						badgeCount={100}
+					/>
 				</Container>
 				<Container 
 					disableGutters
@@ -78,7 +73,9 @@ export default function Header() {
 						width: 72,
 					}}
 				>
-					<Avatar></Avatar>	
+					<IconButton onClick={()=> {router.push('/account')}}>
+						<Avatar></Avatar>	
+					</IconButton>
 				</Container>
 			</Stack>
 		);
