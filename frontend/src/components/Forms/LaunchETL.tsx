@@ -2,12 +2,8 @@
 
 import { useState, FormEvent, ChangeEvent } from 'react';
 
-import { GenerateReportRequest, ReportType, ReportFormat } from '@types/reports';
-
-import {
-	formatDate,
-	parseToISODate,
-} from '@/utils/dateUtils';
+import { LaunchETLRequest, SourceETL } from '@/types/etl';
+import { formatDate, parseToISODate } from '@/utils/dateUtils';
 
 import {
 	Stack,
@@ -23,46 +19,33 @@ import {
 	Alert,
 } from '@mui/material';
 
-import {
-	PictureAsPdf as PdfIcon,
-	Description as ExcelIcon,
-	TextSnippet as CsvIcon,
-} from '@mui/icons-material';
 
-
-const initialState: GenerateReportRequest = {
+const initialState: LaunchETLRequest = {
+	source: 'all',
 	report_date: formatDate(new Date()),
-	report_type: 'full',
-	report_format: 'pdf',
 };
 
-const REPORT_TYPE_OPTIONS = [
-	{ value: 'full' as const, label: 'Полный' },
-	{ value: 'gap' as const, label: 'ГЭП-Анализ' },
-	{ value: 'concentration' as const, label: 'Концентрация' },
-];
-
-const FORMAT_TYPE_OPTIONS = [
-	{ value: 'excel' as const, label: 'Excel (.xlsx)', icon: ExcelIcon },
-	{ value: 'csv' as const, label: 'CSV (.csv)', icon: CsvIcon },
-	{ value: 'pdf' as const, label: 'PDF (.pdf)', icon: PdfIcon },
+const ETL_SOURCE_OPTIONS = [
+	{ value: 'all' as const, label: 'Все (PostgreSQL + Excel)' },
+	{ value: 'postgres' as const, label: 'CSV (.csv)' },
+	{ value: 'excel' as const, label: 'PDF (.pdf)' },
 ];
 
 export default function ReportForm() {
-	const [formData, setFormData] = useState<GenerateReportRequest>(initialState);
+	const [formData, setFormData] = useState<LaunchETLRequest>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState(false);
 
 
-	const handleFormatChange = (
+	const handleSourceChange = (
 		event: React.MouseEvent<HTMLElement>,
-		newFormat: ReportFormat | null,
+		newSource: SourceETL | null,
 	) => {
-		if (newFormat != null) {
+		if (newSource != null) {
 			setFormData({
 				...formData,
-				report_format: newFormat,
+				source: newSource,
 			});
 		}
 	};
@@ -77,13 +60,12 @@ export default function ReportForm() {
 		try {
 			const payload = {
 				report_date: parseToISODate(formData.report_date),
-				report_type: formData.report_type,
-				report_format: formData.report_format,
+				source: formData.source,
 			}
 
 			console.log('PAYLOAD: ', payload);
 
-			const response = await fetch('/api/reports/generate', {
+			const response = await fetch('/api/etl/run', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -158,7 +140,7 @@ export default function ReportForm() {
 			}}
 		>
 			<Typography variant="h4">
-				Новый отчет
+				Запуск ETL-процесса
 			</Typography>
 
 			<Stack direction="column" spacing={1}>
@@ -198,42 +180,24 @@ export default function ReportForm() {
 			</Stack>
 
 			<Stack direction="column" spacing={1}>
-				<TextField
-					label="Тип отчета"
-					value={formData.report_type}
-					select
-					onChange={
-						(e) => setFormData({
-							...formData,
-							report_type: e.target.value as ReportType
-						})
-					}
-					sx={{
-					}}
+				<Typography
+					variant="h6"
 				>
-					{REPORT_TYPE_OPTIONS.map((option) => (
-					  <MenuItem key={option.value} value={option.value}>
-						{option.label}
-					  </MenuItem>
-					))}
-				</TextField>
-
+					Источники данных:
+				</Typography>
 				<ToggleButtonGroup
-					value={formData.report_format}
+					value={formData.source}
 					exclusive
-					onChange={handleFormatChange}
+					onChange={handleSourceChange}
 				>
+					<ToggleButton value="all">
+						Все (PostgreSQL + Excel)
+					</ToggleButton>	
+					<ToggleButton value="postgres">
+						PostgreSQL
+					</ToggleButton>	
 					<ToggleButton value="excel">
-						<ExcelIcon/>
-						Excel (.xlsx)
-					</ToggleButton>	
-					<ToggleButton value="csv">
-						<CsvIcon/>
-						CSV (.csv)
-					</ToggleButton>	
-					<ToggleButton value="pdf">
-						<PdfIcon/>
-						PDF (.pdf)
+						Excel
 					</ToggleButton>	
 				</ToggleButtonGroup>
 			</Stack>
@@ -247,7 +211,7 @@ export default function ReportForm() {
 				}}
 				onClick={() => {console.log(formData);}}
 			>
-				Сгенерировать
+				Запустить ETL
 			</Button>
 
 			{error && (
