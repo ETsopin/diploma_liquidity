@@ -44,7 +44,7 @@ export default function Wrapper({ children }: WrapperProps) {
 						bgcolor: 'surface.light',
 						flex: 1,
 						px: 4,
-						py: 4,
+						py: 8,
 						borderRadius: 4,
 						overflow: 'hidden',
 					}}
@@ -58,7 +58,6 @@ export default function Wrapper({ children }: WrapperProps) {
 							overflow: 'auto',
 						}}
 					>
-
 						{ children }
 					</Stack>
 				</Paper>
