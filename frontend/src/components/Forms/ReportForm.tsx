@@ -15,6 +15,7 @@ import {
 	MenuItem,
 	ToggleButton,
 	ToggleButtonGroup,
+	Alert,
 } from '@mui/material';
 
 import {
@@ -91,6 +92,53 @@ export default function ReportForm() {
 		}
 	};
 
+	const handleSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+
+		setLoading(true);
+		setError(null);
+		setSuccess(false);
+
+		try {
+			const payload = {
+				report_date: parseToISODate(formData.report_date),
+				report_type: formData.report_type,
+				report_format: formData.report_format,
+			}
+
+			console.log('PAYLOAD: ', payload);
+
+			const response = await fetch('/api/reports/generate', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-Key': 'change_me_in_production',
+				},
+				body: JSON.stringify(payload),
+			});
+
+			console.log(response);	
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.message || data.detail || 'Ошибка при генерции отчета');
+			}
+
+			setSuccess(true);
+			console.log('API Response:', data);
+
+			setTimeout(() => setSuccess(false), 5000);
+		
+		} catch (err) {
+			setError(err instanceof Error ? err.message : 'Произошла ошибка');
+			console.log('Ошибка:', err);
+		}
+
+		finally {
+			setLoading(false);
+		}
+	};
+
 
 	const setYearStart = () => {
 		const date = new Date();
@@ -126,6 +174,7 @@ export default function ReportForm() {
 	return (
 		<Stack
 			component="form"
+			onSubmit={handleSubmit}
 			direction="column"
 			spacing={4}
 			sx={{
@@ -215,6 +264,7 @@ export default function ReportForm() {
 			</Stack>
 
 			<Button 
+				type="submit"
 				variant="contained"
 				sx={{
 					bgcolor: 'inverse.surface',
@@ -224,6 +274,29 @@ export default function ReportForm() {
 			>
 				Сгенерировать
 			</Button>
+
+			{error && (
+				<Alert 
+					severity="error"
+					sx={{
+						bgcolor: 'error.errorContainer',
+						color: 'error.onErrorContainer',
+					}}
+				>
+					{error}
+				</Alert>
+			)}
+
+			{success && (
+				<Alert 
+					severity="success"
+					sx={{
+						bgcolor: 'primary.light',
+					}}
+				>
+					Отчет успешно сгенерирован!
+				</Alert>
+			)}
 		</Stack>
 	);
 }
