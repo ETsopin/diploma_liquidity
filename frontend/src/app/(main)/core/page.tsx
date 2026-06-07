@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import ContentStack from '@/components/Layout/ContentStack';
 import LaunchETL from '@/components/Forms/LaunchETL';
+import LaunchCalculation from '@/components/Forms/LaunchCalculation';
 
 import { 
 	Stack,
@@ -44,7 +45,7 @@ export default function Core() {
 
 			{ activeTab === 1 && (
 				<Stack>
-					Calc
+					<LaunchCalculation />
 				</Stack>
 			)}
 

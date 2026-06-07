@@ -35,7 +35,7 @@ export default function ReportForm() {
 	const [formData, setFormData] = useState<LaunchETLRequest>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState(false);
+	const [success, setSuccess] = useState<string | null>(null);
 
 
 	const handleSourceChange = (
@@ -81,10 +81,12 @@ export default function ReportForm() {
 				throw new Error(data.message || data.detail || 'Ошибка при генерции отчета');
 			}
 
-			setSuccess(true);
+			setSuccess(
+				`ETL-процесс успешно завершен! (ID: ${data.batch_id}, загружено: ${data.assets_loaded})`
+			);
 			console.log('API Response:', data);
 
-			setTimeout(() => setSuccess(false), 5000);
+			// setTimeout(() => setSuccess(false), 5000);
 		
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Произошла ошибка');
@@ -233,7 +235,7 @@ export default function ReportForm() {
 						bgcolor: 'primary.light',
 					}}
 				>
-					Отчет успешно сгенерирован!
+					{success}
 				</Alert>
 			)}
 		</Stack>

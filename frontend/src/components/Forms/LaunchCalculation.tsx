@@ -2,12 +2,8 @@
 
 import { useState, FormEvent, ChangeEvent } from 'react';
 
-import { GenerateReportRequest, ReportType, ReportFormat } from '@types/reports';
-
-import {
-	formatDate,
-	parseToISODate,
-} from '@/utils/dateUtils';
+import { LaunchCalculationRequest, CalcType } from '@/types/calculations';
+import { formatDate, parseToISODate } from '@/utils/dateUtils';
 
 import {
 	Stack,
@@ -23,46 +19,33 @@ import {
 	Alert,
 } from '@mui/material';
 
-import {
-	PictureAsPdf as PdfIcon,
-	Description as ExcelIcon,
-	TextSnippet as CsvIcon,
-} from '@mui/icons-material';
 
-
-const initialState: GenerateReportRequest = {
+const initialState: LaunchCalculationRequest = {
+	calc_type: 'full',
 	report_date: formatDate(new Date()),
-	report_type: 'full',
-	report_format: 'pdf',
 };
 
-const REPORT_TYPE_OPTIONS = [
-	{ value: 'full' as const, label: 'Полный' },
-	{ value: 'gap' as const, label: 'ГЭП-Анализ' },
-	{ value: 'concentration' as const, label: 'Концентрация' },
+const ETL_SOURCE_OPTIONS = [
+	{ value: 'all' as const, label: 'Все (PostgreSQL + Excel)' },
+	{ value: 'postgres' as const, label: 'CSV (.csv)' },
+	{ value: 'excel' as const, label: 'PDF (.pdf)' },
 ];
 
-const FORMAT_TYPE_OPTIONS = [
-	{ value: 'excel' as const, label: 'Excel (.xlsx)', icon: ExcelIcon },
-	{ value: 'csv' as const, label: 'CSV (.csv)', icon: CsvIcon },
-	{ value: 'pdf' as const, label: 'PDF (.pdf)', icon: PdfIcon },
-];
-
-export default function ReportForm() {
-	const [formData, setFormData] = useState<GenerateReportRequest>(initialState);
+export default function LaunchCalculation() {
+	const [formData, setFormData] = useState<LaunchCalculationRequest>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);
 
 
-	const handleFormatChange = (
+	const handleCalcTypeChange = (
 		event: React.MouseEvent<HTMLElement>,
-		newFormat: ReportFormat | null,
+		newCalcType: CalcType | null,
 	) => {
-		if (newFormat != null) {
+		if (newCalcType != null) {
 			setFormData({
 				...formData,
-				report_format: newFormat,
+				calc_type: newCalcType,
 			});
 		}
 	};
@@ -77,13 +60,12 @@ export default function ReportForm() {
 		try {
 			const payload = {
 				report_date: parseToISODate(formData.report_date),
-				report_type: formData.report_type,
-				report_format: formData.report_format,
+				source: formData.source,
 			}
 
 			console.log('PAYLOAD: ', payload);
 
-			const response = await fetch('/api/reports/generate', {
+			const response = await fetch('/api/calculations', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -99,10 +81,12 @@ export default function ReportForm() {
 				throw new Error(data.message || data.detail || 'Ошибка при генерции отчета');
 			}
 
-			setSuccess(data.message);
+			setSuccess(
+				`Расчет успешно выполнен! (ID: ${data.calculation_id})`
+			);
 			console.log('API Response:', data);
 
-			// setTimeout(() => setSuccess(false), 5000);
+			// setTimeout(() => setSuccess(null), 5000);
 		
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Произошла ошибка');
@@ -158,7 +142,7 @@ export default function ReportForm() {
 			}}
 		>
 			<Typography variant="h4">
-				Новый отчет
+				Запуск расчета 
 			</Typography>
 
 			<Stack direction="column" spacing={1}>
@@ -198,42 +182,24 @@ export default function ReportForm() {
 			</Stack>
 
 			<Stack direction="column" spacing={1}>
-				<TextField
-					label="Тип отчета"
-					value={formData.report_type}
-					select
-					onChange={
-						(e) => setFormData({
-							...formData,
-							report_type: e.target.value as ReportType
-						})
-					}
-					sx={{
-					}}
+				<Typography
+					variant="h6"
 				>
-					{REPORT_TYPE_OPTIONS.map((option) => (
-					  <MenuItem key={option.value} value={option.value}>
-						{option.label}
-					  </MenuItem>
-					))}
-				</TextField>
-
+					Тип расчета:
+				</Typography>
 				<ToggleButtonGroup
-					value={formData.report_format}
+					value={formData.calc_type}
 					exclusive
-					onChange={handleFormatChange}
+					onChange={handleCalcTypeChange}
 				>
-					<ToggleButton value="excel">
-						<ExcelIcon/>
-						Excel (.xlsx)
+					<ToggleButton value="full">
+						Полный (ГЭП + Концентрация)
 					</ToggleButton>	
-					<ToggleButton value="csv">
-						<CsvIcon/>
-						CSV (.csv)
+					<ToggleButton value="gap">
+						ГЭП
 					</ToggleButton>	
-					<ToggleButton value="pdf">
-						<PdfIcon/>
-						PDF (.pdf)
+					<ToggleButton value="concentration">
+						Концентрация
 					</ToggleButton>	
 				</ToggleButtonGroup>
 			</Stack>
@@ -247,7 +213,7 @@ export default function ReportForm() {
 				}}
 				onClick={() => {console.log(formData);}}
 			>
-				Сгенерировать
+				Запустить расчет
 			</Button>
 
 			{error && (
@@ -269,7 +235,7 @@ export default function ReportForm() {
 						bgcolor: 'primary.light',
 					}}
 				>
-					{ success }
+					{success}
 				</Alert>
 			)}
 		</Stack>
