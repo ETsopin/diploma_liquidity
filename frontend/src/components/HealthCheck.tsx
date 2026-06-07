@@ -54,7 +54,6 @@ export default function HealthCheck() {
 		<Stack
 			direction="row"
 			sx={{
-				height: 32,
 				alignItems: 'center',
 				width: '100%',
 			}}

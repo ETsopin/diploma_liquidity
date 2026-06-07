@@ -87,8 +87,8 @@ const lightNormal: PalleteOptions  = {
     onErrorContainer: '#93000A',
   },
   surface: {
-    main: '#F9FAEF',
-    light: '#FFFFFF',
+    main: '#E1E4D5',
+    light: '#F9FAEF',
     dark: '#1A1C16',
     container: '#EEEFE3',
     containerLow: '#F3F4E9',
@@ -98,8 +98,8 @@ const lightNormal: PalleteOptions  = {
     bright: '#F9FAEF',
   },
   background: {
-    default: '#F9FAEF',
-    paper: '#FFFFFF',
+    default: '#E1E4D5',
+    paper: '#F9FAEF',
   },
   text: {
     primary: '#1A1C16',
@@ -167,8 +167,8 @@ const lightMedium: PaletteOptions = {
     onErrorContainer: '#FFFFFF',
   },
   surface: {
-    main: '#F9FAEF',
-    light: '#FFFFFF',
+    main: '#E1E4D5',
+    light: '#F9FAEF',
     dark: '#0F120C',
     container: '#E8E9DE',
     containerLow: '#F3F4E9',
@@ -178,8 +178,8 @@ const lightMedium: PaletteOptions = {
     bright: '#F9FAEF',
   },
   background: {
-    default: '#F9FAEF',
-    paper: '#FFFFFF',
+    default: '#E1E4D5',
+    paper: '#F9FAEF',
   },
   text: {
     primary: '#0F120C',
@@ -245,8 +245,8 @@ const lightHigh: PaletteOptions = {
     onErrorContainer: '#FFFFFF',
   },
   surface: {
-    main: '#F9FAEF',
-    light: '#FFFFFF',
+    main: '#E1E4D5',
+    light: '#F9FAEF',
     dark: '#000000',
     container: '#E2E3D8',
     containerLow: '#F1F2E6',
@@ -256,8 +256,8 @@ const lightHigh: PaletteOptions = {
     bright: '#F9FAEF',
   },
   background: {
-    default: '#F9FAEF',
-    paper: '#FFFFFF',
+    default: '#E1E4D5',
+    paper: '#F9FAEF',
   },
   text: {
     primary: '#000000',
