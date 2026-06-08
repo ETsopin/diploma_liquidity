@@ -2,6 +2,7 @@
 
 import ContentStack from '@/components/Layout/ContentStack';
 import ReportForm from '@/components/Forms/ReportForm';
+import ReportsList from '@/components/Lists/ReportsList';
 
 import { 
 	Stack,
@@ -21,6 +22,7 @@ export default function Reports() {
 				<Typography variant="h2">{'Отчетность'}</Typography>
 			</Stack>
 			<ReportForm/>
+			<ReportsList/>
 	    </ContentStack>
 	);
 }

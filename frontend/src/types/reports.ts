@@ -25,6 +25,13 @@ export interface ReportsGetRequest {
 	offset: number;
 }
 
+export interface ReportsGetResponse {
+	items: ReportsTaskRecord[];
+	total: number;
+	limit: number;
+	offset: number;
+}
+
 export interface ReportGetDetailsRequest {
 	task_id: number;
 }
