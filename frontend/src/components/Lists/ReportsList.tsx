@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 import { ReportTaskRecord } from '@/types/reports';
 import { getReports } from '@/services/api';
-import { parseToDate, formatDate } from '@/utils/dateUtils'
+import { formatISODate, formatISODateTime } from '@/utils/dateUtils'
 
 import { 
 	List,
@@ -169,7 +169,7 @@ export default function ReportsList() {
 
 						<ListItemText
 							primary={
-								`${report.report_date} - ${report.report_type} (${report.report_format})`
+								`${formatISODate(report.report_date)} - ${report.report_type} (${report.report_format})`
 							}
 
 							secondary={report.report_name}

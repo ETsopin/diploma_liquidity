@@ -60,7 +60,7 @@ export default function CalculateForm() {
 		try {
 			const payload = {
 				report_date: parseToISODate(formData.report_date),
-				source: formData.source,
+				calc_type: formData.calc_type,
 			}
 
 			console.log('PAYLOAD: ', payload);
