@@ -19,6 +19,8 @@ import {
 	Alert,
 } from '@mui/material';
 
+import AssessmentIcon from '@mui/icons-material/Assessment';
+
 
 const initialState: ETLRunRequest = {
 	source: 'all',
@@ -141,9 +143,16 @@ export default function ETLForm() {
 				width: '100%',
 			}}
 		>
-			<Typography variant="h4">
-				Запуск ETL-процесса
-			</Typography>
+			<Stack
+				direction="row"
+				alignItems="center"
+				spacing={1}
+			>
+				<AssessmentIcon fontSize="large" />
+				<Typography variant="h4">
+					Запуск ETL-процесса
+				</Typography>
+			</Stack>
 
 			<Stack direction="column" spacing={1}>
 				<TextField

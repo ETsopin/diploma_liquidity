@@ -23,12 +23,7 @@ import {
 	Alert,
 } from '@mui/material';
 
-import {
-	PictureAsPdf as PdfIcon,
-	Description as ExcelIcon,
-	TextSnippet as CsvIcon,
-} from '@mui/icons-material';
-
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
 
 const initialState: ReportGenerateRequest = {
 	report_date: formatDate(new Date()),
@@ -43,9 +38,9 @@ const REPORT_TYPE_OPTIONS = [
 ];
 
 const FORMAT_TYPE_OPTIONS = [
-	{ value: 'excel' as const, label: 'Excel (.xlsx)', icon: ExcelIcon },
-	{ value: 'csv' as const, label: 'CSV (.csv)', icon: CsvIcon },
-	{ value: 'pdf' as const, label: 'PDF (.pdf)', icon: PdfIcon },
+	{ value: 'excel' as const, label: 'Excel (.xlsx)' },
+	{ value: 'csv' as const, label: 'CSV (.csv)' },
+	{ value: 'pdf' as const, label: 'PDF (.pdf)' } ,
 ];
 
 export default function ReportForm() {
@@ -157,9 +152,18 @@ export default function ReportForm() {
 				width: '100%',
 			}}
 		>
-			<Typography variant="h4">
-				Новый отчет
-			</Typography>
+			<Stack 
+				direction="row"
+				alignItems="center"
+				spacing={1}
+			>
+				<NoteAddIcon
+			 		fontSize="large"	
+				/>
+				<Typography variant="h4">
+					Новый отчет
+				</Typography>
+			</Stack>
 
 			<Stack direction="column" spacing={1}>
 				<TextField
@@ -224,15 +228,12 @@ export default function ReportForm() {
 					onChange={handleFormatChange}
 				>
 					<ToggleButton value="excel">
-						<ExcelIcon/>
 						Excel (.xlsx)
 					</ToggleButton>	
 					<ToggleButton value="csv">
-						<CsvIcon/>
 						CSV (.csv)
 					</ToggleButton>	
 					<ToggleButton value="pdf">
-						<PdfIcon/>
 						PDF (.pdf)
 					</ToggleButton>	
 				</ToggleButtonGroup>

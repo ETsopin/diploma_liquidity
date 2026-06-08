@@ -2,15 +2,20 @@
 
 import { useState, useEffect } from 'react';
 
+import { getETLBatches, getCalculations } from '@/services/api';
+import { formatISODate, formatISODateTime } from '@/utils/dateUtils';
+
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import {
 	Paper,
 	Typography, 
 	Stack,
+	IconButton,
 } from '@mui/material';
 
-import { getETLBatches, getCalculations } from '@/services/api';
-import { formatISODate, formatISODateTime } from '@/utils/dateUtils';
+import LoopIcon from '@mui/icons-material/Loop';
+import HistoryIcon from '@mui/icons-material/History';
+
 
 interface UnifiedOperation {
 	id: string;
@@ -94,11 +99,26 @@ export default function CoreHistory() {
 				width: '100%'
 			}}
 		>
-			<Typography
-				variant="h4"
+			<Stack
+				direction="row"
+				spacing={1}
+				alignItems="center"
 			>
-				Журнал операций расчетного ядра
-			</Typography>
+				<HistoryIcon
+			 		fontSize="large"	
+				/>
+				<Typography
+					variant="h4"
+				>
+					Журнал операций расчетного ядра
+				</Typography>
+				<IconButton
+					fontSize="small"
+					onClick={fetchData}
+				>
+					<LoopIcon/>
+				</IconButton>
+			</Stack>
 			<Paper
 				variant="outlined"
 				sx={{

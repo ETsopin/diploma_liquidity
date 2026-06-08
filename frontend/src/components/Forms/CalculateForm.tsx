@@ -19,6 +19,8 @@ import {
 	Alert,
 } from '@mui/material';
 
+import FunctionsIcon from '@mui/icons-material/Functions';
+
 
 const initialState: CalculateRequest = {
 	calc_type: 'full',
@@ -141,9 +143,16 @@ export default function CalculateForm() {
 				width: '100%',
 			}}
 		>
-			<Typography variant="h4">
-				Запуск расчета 
-			</Typography>
+			<Stack
+				direction="row"
+				alignItems="center"
+				spacing={1}
+			>
+				<FunctionsIcon fontSize="large"/>
+				<Typography variant="h4">
+					Запуск расчета 
+				</Typography>
+			</Stack>
 
 			<Stack direction="column" spacing={1}>
 				<TextField
