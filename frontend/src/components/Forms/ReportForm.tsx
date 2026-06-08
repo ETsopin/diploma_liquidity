@@ -2,7 +2,7 @@
 
 import { useState, FormEvent, ChangeEvent } from 'react';
 
-import { GenerateReportRequest, ReportType, ReportFormat } from '@types/reports';
+import { ReportGenerateRequest, ReportType, ReportFormat } from '@types/reports';
 
 import {
 	formatDate,
@@ -30,7 +30,7 @@ import {
 } from '@mui/icons-material';
 
 
-const initialState: GenerateReportRequest = {
+const initialState: ReportGenerateRequest = {
 	report_date: formatDate(new Date()),
 	report_type: 'full',
 	report_format: 'pdf',
@@ -49,7 +49,7 @@ const FORMAT_TYPE_OPTIONS = [
 ];
 
 export default function ReportForm() {
-	const [formData, setFormData] = useState<GenerateReportRequest>(initialState);
+	const [formData, setFormData] = useState<ReportGenerateRequest>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);

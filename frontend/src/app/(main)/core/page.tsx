@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 import ContentStack from '@/components/Layout/ContentStack';
-import LaunchETL from '@/components/Forms/LaunchETL';
-import LaunchCalculation from '@/components/Forms/LaunchCalculation';
+import ETLForm from '@/components/Forms/ETLForm';
+import CalculateForm from '@/components/Forms/CalculateForm';
 
 import { 
 	Stack,
@@ -40,12 +40,12 @@ export default function Core() {
 			</Tabs>
 
 			{ activeTab === 0 && (
-				<LaunchETL />
+				<ETLForm />
 			)}
 
 			{ activeTab === 1 && (
 				<Stack>
-					<LaunchCalculation />
+					<CalculateForm />
 				</Stack>
 			)}
 

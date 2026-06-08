@@ -2,7 +2,7 @@
 
 import { useState, FormEvent, ChangeEvent } from 'react';
 
-import { LaunchETLRequest, SourceETL } from '@/types/etl';
+import { CalculateRequest, CalcType } from '@/types/calculations';
 import { formatDate, parseToISODate } from '@/utils/dateUtils';
 
 import {
@@ -20,8 +20,8 @@ import {
 } from '@mui/material';
 
 
-const initialState: LaunchETLRequest = {
-	source: 'all',
+const initialState: CalculateRequest = {
+	calc_type: 'full',
 	report_date: formatDate(new Date()),
 };
 
@@ -31,21 +31,21 @@ const ETL_SOURCE_OPTIONS = [
 	{ value: 'excel' as const, label: 'PDF (.pdf)' },
 ];
 
-export default function ReportForm() {
-	const [formData, setFormData] = useState<LaunchETLRequest>(initialState);
+export default function CalculateForm() {
+	const [formData, setFormData] = useState<CalculateRequest>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);
 
 
-	const handleSourceChange = (
+	const handleCalcTypeChange = (
 		event: React.MouseEvent<HTMLElement>,
-		newSource: SourceETL | null,
+		newCalcType: CalcType | null,
 	) => {
-		if (newSource != null) {
+		if (newCalcType != null) {
 			setFormData({
 				...formData,
-				source: newSource,
+				calc_type: newCalcType,
 			});
 		}
 	};
@@ -65,7 +65,7 @@ export default function ReportForm() {
 
 			console.log('PAYLOAD: ', payload);
 
-			const response = await fetch('/api/etl/run', {
+			const response = await fetch('/api/calculations', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -82,11 +82,11 @@ export default function ReportForm() {
 			}
 
 			setSuccess(
-				`ETL-процесс успешно завершен! (ID: ${data.batch_id}, загружено: ${data.assets_loaded})`
+				`Расчет успешно выполнен! (ID: ${data.calculation_id})`
 			);
 			console.log('API Response:', data);
 
-			// setTimeout(() => setSuccess(false), 5000);
+			// setTimeout(() => setSuccess(null), 5000);
 		
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Произошла ошибка');
@@ -142,7 +142,7 @@ export default function ReportForm() {
 			}}
 		>
 			<Typography variant="h4">
-				Запуск ETL-процесса
+				Запуск расчета 
 			</Typography>
 
 			<Stack direction="column" spacing={1}>
@@ -185,21 +185,21 @@ export default function ReportForm() {
 				<Typography
 					variant="h6"
 				>
-					Источники данных:
+					Тип расчета:
 				</Typography>
 				<ToggleButtonGroup
-					value={formData.source}
+					value={formData.calc_type}
 					exclusive
-					onChange={handleSourceChange}
+					onChange={handleCalcTypeChange}
 				>
-					<ToggleButton value="all">
-						Все (PostgreSQL + Excel)
+					<ToggleButton value="full">
+						Полный (ГЭП + Концентрация)
 					</ToggleButton>	
-					<ToggleButton value="postgres">
-						PostgreSQL
+					<ToggleButton value="gap">
+						ГЭП
 					</ToggleButton>	
-					<ToggleButton value="excel">
-						Excel
+					<ToggleButton value="concentration">
+						Концентрация
 					</ToggleButton>	
 				</ToggleButtonGroup>
 			</Stack>
@@ -213,7 +213,7 @@ export default function ReportForm() {
 				}}
 				onClick={() => {console.log(formData);}}
 			>
-				Запустить ETL
+				Запустить расчет
 			</Button>
 
 			{error && (
