@@ -36,7 +36,6 @@ export default function NavIconButton({
 	};
 	
 	const isActive = (pathname === href);
-	console.log(isActive, pathname, href);
 
 	const button = (
 		<IconButton 
