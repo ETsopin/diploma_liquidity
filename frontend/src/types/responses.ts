@@ -35,6 +35,7 @@ export interface ETLRunResponse {
 	error?: string | null;
 }
 
+
 export interface GapAnalysisResponse {
 	report_date: string;
 	calculation_id: number;

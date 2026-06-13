@@ -3,11 +3,9 @@ const TMP_API_KEY = 'change_me_in_production';
 import { 
 	HttpMethod,
 	HealthResponse,
-} from '@/types/api';
-
-import {
 	TimebucketInfo,
-} from '@types/schemas';
+	CounterPartiesResponse,
+} from '@/types';
 
 export const fetchAPI = async<TRequest = never, TResponse= any>(
 	endpoint: string,
@@ -53,8 +51,26 @@ export const getTimebuckets = async () => {
 	}
 };
 
-
 // GET references/couterparties
+export const getCounterparties = async (
+	search?: string,
+	limit: number = 50,
+	offset: number = 0
+
+): Promise<CounterpartiesResponse | null> => {
+
+	let endpoint = `references/counterparties?limit=${limit}&offset=${offset}`;
+	try {
+		if (search) {
+			endpoint += `&search=${encodeURIComponent(search)}`;
+		}
+
+	} catch (err) {
+		return null;
+	}
+
+	return await fetchAPI<never, CounterpartiesResponse>(endpoint);
+}
 
 // POST /reports/generate
 export const generareReport = async (payload) => {

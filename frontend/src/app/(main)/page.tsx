@@ -5,6 +5,7 @@ import { useState } from 'react';
 import ContentStack from '@/components/Layout/ContentStack';
 import HealthCheck from '@/components/HealthCheck';
 import TimebucketsDataGrid from '@/components/DataGrids/Timebuckets';
+import CounterpartiesDataGrid from '@/components/DataGrids/Counterparties';
 
 import {
 	Stack,
@@ -30,6 +31,7 @@ export default function Home() {
 				</Stack>
 				<HealthCheck />
 				<TimebucketsDataGrid />
+				<CounterpartiesDataGrid />
 			</ContentStack>
 	);
 }
