@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 
 import SchemaIcon from '@mui/icons-material/Schema';
-import LoopIcon from '@mui/icons-material/Loop';
 
 export default function TimebucketsDataGrid() {
 	const [rows, setRows] = useState<TimebucketInfo[]>([]);
@@ -73,13 +72,6 @@ export default function TimebucketsDataGrid() {
 				<Typography variant="h4">
 					Временные корзины (ЦБ РФ)
 				</Typography>
-				<IconButton 
-					variant="small"
-					onClick={fetchData}
-					color="tertiary"
-				>
-					<LoopIcon />
-				</IconButton>
 			</Stack>
 			<Paper
 				variant="outlined"

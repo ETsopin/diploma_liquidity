@@ -44,6 +44,7 @@ export const healthCheck = async () => {
 	}
 };
 
+// GET references/timebuckets
 export const getTimebuckets = async () => {
 	try {
 		return fetchAPI<never, TimebucketInfo>('references/timebuckets');
@@ -51,6 +52,9 @@ export const getTimebuckets = async () => {
 		return null;
 	}
 };
+
+
+// GET references/couterparties
 
 // POST /reports/generate
 export const generareReport = async (payload) => {

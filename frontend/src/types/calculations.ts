@@ -18,7 +18,7 @@ export interface CalculateResponse {
 export interface CalculationRecord {
 	id: number;
 	report_date: string;
-	calc_type: string;
+	calc_type: CalcType;
 	status: string;
 	started_at: string;
 	finished_at: string | null;
@@ -61,5 +61,4 @@ export interface GapAnalysisResponse {
 	total_assets: number;
 	total_liabilities: number;
 	net_gap: number;
-
 }
