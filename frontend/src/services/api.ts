@@ -1,11 +1,39 @@
 const TMP_API_KEY = 'change_me_in_production';
 
+import { HttpMethod } from '@/types/api';
+
+export const fetchAPI = async<TRequest = never, TResponse= any>(
+	endpoint: string,
+   	httpMethod: HttpMethod = 'GET',
+   	payload?: TRequest
+): Promise<TResponse> => {
+	const options: RequestInit = {	
+		method: httpMethod,
+		headers: {
+			'Content-Type': 'application/json',
+			'X-API-Key': TMP_API_KEY, 
+		},
+	};
+
+	if (payload && ['POST'].includes(httpMethod)) {
+		options.body = JSON.stringify(payload);
+	}
+	
+	const response = await fetch(`/api/${endpoint}`, options);
+
+	if (!response.ok) {
+		// todo error handle
+	}
+
+	return response.json();
+};
+
 // GET /health
 export const healthCheck = async () => {
-	const response = await fetch('/api/health');
-	if (!response.ok) return null; 
-	else data = await response.json();
-	return data;
+	return fetchAPI<never, {status: string; dabase: string }>('health', 'GET');
+// const response = await fetch('/api/health');
+// if (!response.ok) return null; 
+// return response.json();
 };
 
 // POST /reports/generate
