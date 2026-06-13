@@ -1,6 +1,13 @@
 const TMP_API_KEY = 'change_me_in_production';
 
-import { HttpMethod } from '@/types/api';
+import { 
+	HttpMethod,
+	HealthResponse,
+} from '@/types/api';
+
+import {
+	TimebucketInfo,
+} from '@types/schemas';
 
 export const fetchAPI = async<TRequest = never, TResponse= any>(
 	endpoint: string,
@@ -30,10 +37,19 @@ export const fetchAPI = async<TRequest = never, TResponse= any>(
 
 // GET /health
 export const healthCheck = async () => {
-	return fetchAPI<never, {status: string; dabase: string }>('health', 'GET');
-// const response = await fetch('/api/health');
-// if (!response.ok) return null; 
-// return response.json();
+	try {
+		return fetchAPI<never, HealthResponse>('health');
+	} catch {
+		return null;
+	}
+};
+
+export const getTimebuckets = async () => {
+	try {
+		return fetchAPI<never, TimebucketInfo>('references/timebuckets');
+	} catch {
+		return null;
+	}
 };
 
 // POST /reports/generate

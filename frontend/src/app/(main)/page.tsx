@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import ContentStack from '@/components/Layout/ContentStack';
 import HealthCheck from '@/components/HealthCheck';
-
+import TimebucketsDataGrid from '@/components/DataGrids/Timebuckets';
 
 import {
 	Stack,
@@ -29,6 +29,7 @@ export default function Home() {
 					<Typography variant="h5" color='text.secondary'>{`${userRole}`}</Typography>
 				</Stack>
 				<HealthCheck />
+				<TimebucketsDataGrid />
 			</ContentStack>
 	);
 }
