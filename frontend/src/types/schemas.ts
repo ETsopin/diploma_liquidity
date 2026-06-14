@@ -33,6 +33,26 @@ export interface GapBucketResult {
 
 export type ETLSource = 'all' | 'excel' | 'postgres';
 
+export interface ETLSourceConnection {
+	id: number;
+	name: string;
+	type: ETLSource;
+	connection_string?: string;
+}
+
+export interface ETLBatchDetails {
+	id: number;
+	datasource_id: number;
+	started_at: string;
+	finished_at: string | null;
+	status: string;
+	rows_extracted: number | null;
+	rows_loaded: number | null;
+	error_message: string | null;
+	initiated_by: string | null;
+	datasource_name: string;
+}
+
 export type ReportType = 'full' | 'gap' | 'concentration';
 export type ReportFormat = 'excel' | 'csv' | 'pdf';
 

@@ -76,7 +76,7 @@ export default function GapBarChart() {
 				sx={{
 					p: 3,
 					width: '100%',
-					bgcolor: 'surface.light'
+					// bgcolor: 'surface.light'
 				}}
 			>
 				<Stack direction="column" spacing={3}>

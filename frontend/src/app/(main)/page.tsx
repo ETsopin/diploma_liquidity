@@ -8,6 +8,7 @@ import TimebucketsDataGrid from '@/components/DataGrids/Timebuckets';
 import CounterpartiesDataGrid from '@/components/DataGrids/Counterparties';
 import ConcentrationPie from '@/components/Charts/ConcentrationPie';
 import GapBarChart from '@/components/Charts/GapBarChart';
+import ETLBatchDetails from '@/components/Details/ETLBatchDetails';
 
 import {
 	Stack,
@@ -36,6 +37,7 @@ export default function Home() {
 				<CounterpartiesDataGrid />
 				<ConcentrationPie />
 				<GapBarChart />
+				<ETLBatchDetails />
 			</ContentStack>
 	);
 }

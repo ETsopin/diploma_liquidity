@@ -4,6 +4,7 @@ import {
 	HttpMethod,
 	HealthResponse,
 	TimebucketInfo,
+	ETLBatchDetails, 
 	CounterPartiesResponse,
 	ConcentrationResponse,
 	GapAnalysisResponse,
@@ -55,7 +56,7 @@ export const getTimebuckets = async () => {
 	}
 };
 
-// GET references/couterparties
+// GET /references/couterparties
 export const getCounterparties = async (
 	search?: string,
 	limit: number = 50,
@@ -77,7 +78,7 @@ export const getCounterparties = async (
 	return await fetchAPI<never, CounterpartiesResponse>(endpoint);
 }
 
-// GET calculations/concentration
+// GET /calculations/concentration
 export const getConcentration = async (
 	reportDate: string,
 	category: 'asset' | 'liability' = 'liability',
@@ -99,7 +100,7 @@ export const getConcentration = async (
 	}
 };
 
-// GET calculations/gap/
+// GET /calculations/gap/
 export const getGapAnalysis = async (
 	reportDate: string,
 	calculationId?: number
@@ -113,6 +114,19 @@ export const getGapAnalysis = async (
 		return await fetchAPI<never, GapAnalysisResponse>(endpoint);
 	} catch (err) {
 		console.error("getGap API Fetch Error:", err);
+		return null;
+	}
+};
+
+// GET /etl/batches/{batch_id}
+export const getETLBatchDetails = async (
+	batchId: number
+) : Promise<ETLBatchDetails | null> => {
+	try {
+		return await fetchAPI<never, ETLBatchDetails>(`etl/batches/${batchId}`);
+	
+	} catch (err) {
+		console.error("getETLBatchDeatils API Fetch Error:", err);
 		return null;
 	}
 };

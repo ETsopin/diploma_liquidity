@@ -73,7 +73,7 @@ export default function ConcentrationPie() {
 					sx={{
 						width: '100%',
 						p: 3,
-						bgcolor: "surface.light",
+						// bgcolor: "surface.light",
 					}}
 				>
 				<Stack spacing={2}>
