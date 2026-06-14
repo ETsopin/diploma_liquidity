@@ -10,6 +10,7 @@ import {
 	TextField,
 	CircularProgress,
 	Alert,
+	Divider,
 } from '@mui/material';
 
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -80,7 +81,13 @@ export default function GapBarChart() {
 				}}
 			>
 				<Stack direction="column" spacing={3}>
-					<Stack direction="row" spacing={2}>
+					<Stack
+				   		direction="row" 
+						spacing={2}
+						sx={{
+							p: 1
+						}}
+					>
 						<Typography variant="body1">
 							<strong>Активы:</strong> {totalAssets.toFixed(2)} млрд ₽
 						</Typography>
@@ -91,6 +98,7 @@ export default function GapBarChart() {
 							<strong>Нет-ГЭП:</strong> {netGap.toFixed(2)} млрд ₽
 						</Typography>
 					</Stack>
+					<Divider />
 					<BarChart
 						xAxis={[
 							{

@@ -9,7 +9,8 @@ import {
    	IconButton,
    	TextField, 
 	CircularProgress,
-   	Alert 
+   	Alert,
+	Divider,	
 } from '@mui/material';
 
 import { PieChart } from '@mui/x-charts/PieChart';
@@ -77,6 +78,21 @@ export default function ConcentrationPie() {
 					}}
 				>
 				<Stack spacing={2}>
+					<Stack
+				   		direction="row" 
+						spacing={1}
+						sx={{
+							p: 1
+						}}
+					>
+						<Typography variant="h6">
+							<strong>Всего:</strong> {(data.total_amount / 1000).toLocaleString()} ₽
+						</Typography>
+						<Typography variant="h6">
+							<strong>Контрагентов:</strong> {data.items.length}
+						</Typography>
+					</Stack>
+					<Divider />
 					<PieChart
 						series={[
 							{
@@ -95,14 +111,6 @@ export default function ConcentrationPie() {
 							},
 						}}
 					/>
-					<Stack direction="row" spacing={1}>
-						<Typography variant="h6">
-							Всего: {(data.total_amount / 1000).toLocaleString()} ₽
-						</Typography>
-						<Typography variant="h6">
-							Контрагентов: {data.items.length}
-						</Typography>
-					</Stack>
 				</Stack>
 				</Paper>
 			)}
