@@ -7,6 +7,7 @@ import HealthCheck from '@/components/HealthCheck';
 import TimebucketsDataGrid from '@/components/DataGrids/Timebuckets';
 import CounterpartiesDataGrid from '@/components/DataGrids/Counterparties';
 import ConcentrationPie from '@/components/Charts/ConcentrationPie';
+import GapBarChart from '@/components/Charts/GapBarChart';
 
 import {
 	Stack,
@@ -34,6 +35,7 @@ export default function Home() {
 				<TimebucketsDataGrid />
 				<CounterpartiesDataGrid />
 				<ConcentrationPie />
+				<GapBarChart />
 			</ContentStack>
 	);
 }

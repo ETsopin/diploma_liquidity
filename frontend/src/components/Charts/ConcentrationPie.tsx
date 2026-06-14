@@ -31,6 +31,7 @@ export default function ConcentrationPie() {
 			const response = await getConcentration(reportDate, 'liability');
 			setData(response);
 			console.log('Concentration response:', response);
+			setError(null);
 		} catch (err) {
 			setError('Ошибка загрузки');
 			console.log('Concentration Fetch Failed:', err);
@@ -67,6 +68,14 @@ export default function ConcentrationPie() {
 			{error && <Alert severity="error">{error}</Alert>}
 			
 			{data && data.items && data.items.length > 0 && (
+				<Paper
+					variant="outlined"
+					sx={{
+						width: '100%',
+						p: 3,
+						bgcolor: "surface.light",
+					}}
+				>
 				<Stack spacing={2}>
 					<PieChart
 						series={[
@@ -95,6 +104,7 @@ export default function ConcentrationPie() {
 						</Typography>
 					</Stack>
 				</Stack>
+				</Paper>
 			)}
 			
 			{data && (!data.items || data.items.length === 0) && (

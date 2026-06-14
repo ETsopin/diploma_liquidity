@@ -6,6 +6,7 @@ import {
 	TimebucketInfo,
 	CounterPartiesResponse,
 	ConcentrationResponse,
+	GapAnalysisResponse,
 } from '@/types';
 
 export const fetchAPI = async<TRequest = never, TResponse= any>(
@@ -28,7 +29,7 @@ export const fetchAPI = async<TRequest = never, TResponse= any>(
 	const response = await fetch(`/api/${endpoint}`, options);
 
 	if (!response.ok) {
-		// todo error handle
+		console.error('fetchAPI Failed Response:', response);
 	}
 
 	return response.json();
@@ -39,6 +40,7 @@ export const healthCheck = async () => {
 	try {
 		return fetchAPI<never, HealthResponse>('health');
 	} catch {
+		console.error("getHealth API Fetch Error:", err);
 		return null;
 	}
 };
@@ -48,6 +50,7 @@ export const getTimebuckets = async () => {
 	try {
 		return fetchAPI<never, TimebucketInfo>('references/timebuckets');
 	} catch {
+		console.error("getTimebuckets API Fetch Error:", err);
 		return null;
 	}
 };
@@ -67,6 +70,7 @@ export const getCounterparties = async (
 		}
 
 	} catch (err) {
+		console.error("getCounterparties API Fetch Error:", err);
 		return null;
 	}
 
@@ -90,6 +94,25 @@ export const getConcentration = async (
 	try {
 		return await fetchAPI<never, ConcentrationResponse>(endpoint);
 	} catch (err) {
+		console.error("getConcentration API Fetch Error:", err);
+		return null;
+	}
+};
+
+// GET calculations/gap/
+export const getGapAnalysis = async (
+	reportDate: string,
+	calculationId?: number
+): Promise<GapAnalysisResponse | null> => {
+	let endpoint = `calculations/gap/${reportDate}`;
+	if (calculationId) {
+		endpoint += `?calculation_id=${calculationId}`;
+	}
+
+	try {
+		return await fetchAPI<never, GapAnalysisResponse>(endpoint);
+	} catch (err) {
+		console.error("getGap API Fetch Error:", err);
 		return null;
 	}
 };
