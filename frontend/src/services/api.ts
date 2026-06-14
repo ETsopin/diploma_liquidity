@@ -5,6 +5,7 @@ import {
 	HealthResponse,
 	TimebucketInfo,
 	CounterPartiesResponse,
+	ConcentrationResponse,
 } from '@/types';
 
 export const fetchAPI = async<TRequest = never, TResponse= any>(
@@ -71,6 +72,27 @@ export const getCounterparties = async (
 
 	return await fetchAPI<never, CounterpartiesResponse>(endpoint);
 }
+
+// GET calculations/concentration
+export const getConcentration = async (
+	reportDate: string,
+	category: 'asset' | 'liability' = 'liability',
+	calculationId?: number,
+	limit: number = 10,
+	offset: number = 0
+): Promise<ConcentrationResponse | null> => {
+	let endpoint = `calculations/concentration/${reportDate}?category=${category}&limit=${limit}&offset=${offset}`;
+
+	if (calculationId) {
+		endpoint += `&calculation_id=${calculationId}`;
+	}
+
+	try {
+		return await fetchAPI<never, ConcentrationResponse>(endpoint);
+	} catch (err) {
+		return null;
+	}
+};
 
 // POST /reports/generate
 export const generareReport = async (payload) => {

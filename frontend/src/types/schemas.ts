@@ -16,7 +16,7 @@ export interface ConcentrationItem {
 	counterparty_type: string;
 	bucket_code: string;
 	bucket_name: string;
-	amount_tub: number;
+	amount_rub: number;
 	share_pct: number;
 }
 

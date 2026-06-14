@@ -15,4 +15,3 @@ export interface ReportGenerateRequest {
 	report_type: ReportType;
 	report_format: ReportFormat;
 }
-

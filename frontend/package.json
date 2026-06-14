@@ -15,7 +15,7 @@
 	"@mui/icons-material": "^5.0.0",
 	"@mui/material-nextjs": "^5.0.0",
 	"@mui/x-data-grid": "^6.0.0",
-	"@mui/x-charts": "^6.0.0", 
+	"@mui/x-charts": "^8.0.0", 
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@emotion/server": "^11.11.0",
