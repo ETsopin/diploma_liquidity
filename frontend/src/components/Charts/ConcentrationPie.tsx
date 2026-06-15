@@ -11,6 +11,8 @@ import {
 	CircularProgress,
    	Alert,
 	Divider,	
+	Tabs,
+	Tab,
 } from '@mui/material';
 
 import { PieChart } from '@mui/x-charts/PieChart';
@@ -25,11 +27,13 @@ export default function ConcentrationPie() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [reportDate, setReportDate] = useState('2026-06-14');
+	const [category, setCategory] = useState<'liability' | 'asset'>('asset');
+	const [tabValue, setTabValue] = useState(0);
 	
 	const fetchData = async () => {
 		setLoading(true);
 		try {
-			const response = await getConcentration(reportDate, 'liability');
+			const response = await getConcentration(reportDate, category);
 			setData(response);
 			console.log('Concentration response:', response);
 			setError(null);
@@ -43,13 +47,21 @@ export default function ConcentrationPie() {
 	
 	useEffect(() => {
 		fetchData();
-	}, [reportDate]);
+	}, [reportDate, category]);
+
+	const handleTabChange = (
+		event: React.SyntheticEvent,
+	   	newValue: number
+	) => {
+		setTabValue(newValue);
+		setCategory(newValue === 0 ? 'asset' : 'liability');
+	}
 	
-	const pieData = data?.items.map((item, index) => ({
+	const pieData = (data && data.items) ? data.items.map((item, index) => ({
 		id: index,
 		label: `${item.counterparty_name} (${item.share_pct.toFixed(1)}%) `,
 		value: item.amount_rub / 1000,
-	})) || [];
+	})) : [];
 
 	return (
 		<Stack 
@@ -70,7 +82,7 @@ export default function ConcentrationPie() {
 				</Typography>
 			</Stack>
 			
-			{loading && <CircularProgress />}
+			{loading }
 			
 			{error && <Alert severity="error">{error}</Alert>}
 			
@@ -86,18 +98,29 @@ export default function ConcentrationPie() {
 				>
 				<Stack spacing={2}>
 					<Stack
-				   		direction="row" 
-						spacing={1}
-						sx={{
-							p: 1
-						}}
+						direction="row"
+						alignItems="center"
+						justifyContent="space-between"
 					>
-						<Typography variant="h6">
-							<strong>Всего:</strong> {(data.total_amount / 1000).toLocaleString()} ₽
-						</Typography>
-						<Typography variant="h6">
-							<strong>Контрагентов:</strong> {data.items.length}
-						</Typography>
+						<Tabs value={tabValue} onChange={handleTabChange}>
+							<Tab label="Активы" />
+							<Tab label="Обязательства" />
+
+						</Tabs>
+						<Stack
+							direction="row" 
+							spacing={1}
+							sx={{
+								p: 1
+							}}
+						>
+							<Typography variant="h6">
+								<strong>Всего:</strong> {(data.total_amount / 1000).toLocaleString()} ₽
+							</Typography>
+							<Typography variant="h6">
+								<strong>Контрагентов:</strong> {data.items.length}
+							</Typography>
+						</Stack>
 					</Stack>
 					<Divider />
 					<PieChart

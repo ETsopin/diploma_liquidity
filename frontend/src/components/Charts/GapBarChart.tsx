@@ -98,6 +98,7 @@ export default function GapBarChart() {
 						sx={{
 							p: 1
 						}}
+						alignItems="center"
 					>
 						<Typography variant="body1">
 							<strong>Активы:</strong> {totalAssets.toFixed(2)} млрд ₽
