@@ -162,7 +162,7 @@ export const getReports = async (limit: number = 50, offset: number = 0) => {
 
 // GET /etl/batches
 export const getETLBatches = async (limit: number = 50, offset: number = 0 ) => {
-	const response = await fetch(`/api/etl/baches?limit=${limit}&offset=${offset}`, {
+	const response = await fetch(`/api/etl/batches?limit=${limit}&offset=${offset}`, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',

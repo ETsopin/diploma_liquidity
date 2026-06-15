@@ -33,11 +33,18 @@ export default function Home() {
 					<Typography variant="h5" color='text.secondary'>{`${userRole}`}</Typography>
 				</Stack>
 				<HealthCheck />
+				<Stack
+					direction = "row"
+					spacing={2}
+					sx={{
+						width: '100%',
+					}}
+				>
+					<ConcentrationPie />
+					<GapBarChart />
+				</Stack>
 				<TimebucketsDataGrid />
 				<CounterpartiesDataGrid />
-				<ConcentrationPie />
-				<GapBarChart />
-				<ETLBatchDetails />
 			</ContentStack>
 	);
 }

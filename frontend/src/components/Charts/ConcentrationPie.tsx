@@ -52,14 +52,20 @@ export default function ConcentrationPie() {
 	})) || [];
 
 	return (
-		<Stack spacing={2}>
+		<Stack 
+			spacing={2}
+			sx={{
+				width: '100%',
+				height: '100%',
+			}}
+		>
 			<Stack
 				direction="row"
 				alignItems="center"
 				spacing={1}
 			>
 				<PercentIcon />
-				<Typography variant="h4">
+				<Typography variant="h5">
 					Концентрация
 				</Typography>
 			</Stack>
@@ -73,6 +79,7 @@ export default function ConcentrationPie() {
 					variant="outlined"
 					sx={{
 						width: '100%',
+						height: '100%',
 						p: 3,
 						// bgcolor: "surface.light",
 					}}

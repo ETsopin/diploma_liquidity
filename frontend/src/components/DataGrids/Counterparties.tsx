@@ -79,7 +79,8 @@ export default function CounterpartiesDataGrid() {
 		<Stack   
 			direction="column"
 			sx={{
-				width: '100%'
+				width: '100%',
+				height: '100%',
 			}}
 			spacing={2}
 		>
@@ -89,7 +90,7 @@ export default function CounterpartiesDataGrid() {
 				alignItems="center"
 			>
 				<PeopleIcon />
-				<Typography variant="h4">
+				<Typography variant="h5">
 					Справочник контрагентов	
 				</Typography>
 			</Stack>
@@ -97,6 +98,7 @@ export default function CounterpartiesDataGrid() {
 				variant="outlined"
 				sx={{
 					width: '100%',
+					height: '100%',
 				}}
 			>
 				<DataGrid 

@@ -55,14 +55,24 @@ export default function GapBarChart() {
 	const netGap = (data?.net_gap || 0) / 1e9;
 	
 	return (
-		<Stack spacing={2}>
+		<Stack 
+			spacing={2}
+			sx={{
+				width: '100%',
+				height: '100%',
+			}}
+		
+		>
 			<Stack 
 				direction="row"
 				spacing={1} 
 				alignItems="center"
+				sx={{
+					width: '100%',
+				}}
 			>
 				<TimelineIcon />
-				<Typography variant="h4">
+				<Typography variant="h5">
 					ГЭП-анализ
 				</Typography>
 			</Stack>
@@ -77,6 +87,7 @@ export default function GapBarChart() {
 				sx={{
 					p: 3,
 					width: '100%',
+					height: '100%',
 					// bgcolor: 'surface.light'
 				}}
 			>

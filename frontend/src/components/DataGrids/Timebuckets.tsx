@@ -59,7 +59,8 @@ export default function TimebucketsDataGrid() {
 		<Stack   
 			direction="column"
 			sx={{
-				width: '100%'
+				width: '100%',
+				height: '100%',
 			}}
 			spacing={2}
 		>
@@ -69,7 +70,7 @@ export default function TimebucketsDataGrid() {
 				alignItems="center"
 			>
 				<SchemaIcon />
-				<Typography variant="h4">
+				<Typography variant="h5">
 					Временные корзины (ЦБ РФ)
 				</Typography>
 			</Stack>
@@ -77,6 +78,7 @@ export default function TimebucketsDataGrid() {
 				variant="outlined"
 				sx={{
 					width: '100%',
+					height: '100%',
 				}}
 			>
 				<DataGrid 
