@@ -61,6 +61,9 @@ export default function Home() {
 				<Stack
 					direction="row"
 					spacing={2}
+					sx={{
+						width: '100%',
+					}}
 				>
 					<TimebucketsDataGrid />
 					<CounterpartiesDataGrid />
