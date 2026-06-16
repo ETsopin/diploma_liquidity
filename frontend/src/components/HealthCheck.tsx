@@ -46,7 +46,6 @@ export default function HealthCheck() {
 	};
 
 	useEffect(() => {
-		
 		checkHealth();
 	}, []);
 

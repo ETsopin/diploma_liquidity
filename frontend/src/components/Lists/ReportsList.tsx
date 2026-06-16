@@ -107,7 +107,6 @@ export default function ReportsList() {
 	return (
 		<Stack
 			direction="column"
-			spacing={2}
 			sx={{
 				width: '100%'
 			}}

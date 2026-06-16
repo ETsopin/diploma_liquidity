@@ -26,7 +26,7 @@ interface UnifiedOperation {
 	source: 'etl' | 'calculations';
 }
 
-export default function CoreHistory() {
+export default function CoreHistoryDataGrid() {
 	const [rows, setRows ] = useState<UnifiedOperation[]>([]);
 	const [loading, setLoading] = useState(true);
 
