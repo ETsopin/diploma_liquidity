@@ -9,6 +9,10 @@ import CounterpartiesDataGrid from '@/components/DataGrids/Counterparties';
 import ConcentrationPie from '@/components/Charts/ConcentrationPie';
 import GapBarChart from '@/components/Charts/GapBarChart';
 import ETLBatchDetails from '@/components/Details/ETLBatchDetails';
+import CalculationDetails from '@/components/Details/CalculationDetails';
+import ReportDetails from '@/components/Details/ReportDetails';
+
+import ArticleIcon from '@mui/icons-material/Article';
 
 import {
 	Stack,
@@ -34,7 +38,7 @@ export default function Home() {
 				</Stack>
 				<HealthCheck />
 				<Stack
-					direction = "row"
+					direction="row"
 					spacing={2}
 					sx={{
 						width: '100%',
@@ -43,8 +47,24 @@ export default function Home() {
 					<ConcentrationPie />
 					<GapBarChart />
 				</Stack>
-				<TimebucketsDataGrid />
-				<CounterpartiesDataGrid />
+				<Stack
+					direction="row"
+					spacing={2}
+					sx={{
+						width: '100%',
+					}}
+				>
+					<ETLBatchDetails />
+					<CalculationDetails />
+					<ReportDetails />
+				</Stack>
+				<Stack
+					direction="row"
+					spacing={2}
+				>
+					<TimebucketsDataGrid />
+					<CounterpartiesDataGrid />
+				</Stack>
 			</ContentStack>
 	);
 }

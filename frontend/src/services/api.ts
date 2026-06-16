@@ -160,6 +160,16 @@ export const getReports = async (limit: number = 50, offset: number = 0) => {
 	return data;
 }; 
 
+// GET /reports/{task_id}
+export const getReportById = async (id: number): Promise<any | null> => {
+	try {
+		return await fetchAPI<never, any>(`reports/${id}`);
+	
+	} catch (err) {
+		console.error(`getReportById (${id}) Failed:`, err);
+	}
+};
+
 // GET /etl/batches
 export const getETLBatches = async (limit: number = 50, offset: number = 0 ) => {
 	const response = await fetch(`/api/etl/batches?limit=${limit}&offset=${offset}`, {
@@ -187,3 +197,13 @@ export const getCalculations = async (limit: number = 50 , offset: number = 0) =
 	const data = await response.json();
 	return data;
 };
+
+// GET /calculations/{calculation_id}
+export const getCalculationById = async (id: number): Promise<any | null> => {
+	try {
+		return await fetchAPI<never, any>(`calculations/${id}`);
+	
+	} catch (err) {
+		console.error(`getReportById (${id}) Failed:`, err);
+	}
+}; 

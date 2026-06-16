@@ -18,13 +18,15 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
 import { getGapAnalysis } from '@/services/api';
+import { getLatestCalculationDate } from '@/services/latest';
+import { formatISODate } from '@/utils/dateUtils';
 import { GapAnalysisResponse } from '@/types';
 
 export default function GapBarChart() {
 	const [data, setData] = useState<GapAnalysisResponse | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [reportDate, setReportDate] = useState('2026-06-14');
+	const [reportDate, setReportDate] = useState<string | null>(null);
 	
 	const fetchData = async () => {
 		setLoading(true);
@@ -41,9 +43,15 @@ export default function GapBarChart() {
 			setLoading(false);
 		}
 	};
+
+	const loadLatestDate = async () => {
+		const latestDate = await getLatestCalculationDate('gap');
+		if (latestDate) setReportDate(latestDate);
+	}
 	
 	useEffect(() => {
-		fetchData();
+		loadLatestDate();
+		if (reportDate) fetchData();
 	}, [reportDate]);
 	
 	const bucketNames = (data && data.buckets) ? data.buckets.map((b) => b.bucket_name) : [];
@@ -91,6 +99,7 @@ export default function GapBarChart() {
 					// bgcolor: 'surface.light'
 				}}
 			>
+
 				<Stack direction="column" spacing={3}>
 					<Stack
 				   		direction="row" 
@@ -138,7 +147,7 @@ export default function GapBarChart() {
 		  )}
 	
 		  {data && (!data.buckets || data.buckets.length === 0) && (
-			<Alert severity="info">Нет данных ГЭП-анализа за {reportDate}</Alert>
+			<Alert severity="info">Нет данных за {formatISODate(reportDate)}</Alert>
 		  )}
 		</Stack>
 	);

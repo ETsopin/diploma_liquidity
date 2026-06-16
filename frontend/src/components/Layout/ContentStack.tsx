@@ -9,7 +9,7 @@ export default function ContentStack({children} : ReactNode) {
 	return (
 		<Stack
 			direction="column"
-			spacing={2}
+			spacing={3}
 			sx={{
 				px: 10,
 				width: '100%',

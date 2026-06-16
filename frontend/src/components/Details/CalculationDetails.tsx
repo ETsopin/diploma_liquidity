@@ -13,12 +13,10 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import PendingIcon from '@mui/icons-material/Pending';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import { getETLBatchDetails } from '@/services/api';
-import { ETLBatchDetails } from '@/types/schemas';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import { getCalculationById } from '@/services/api';
+import { getLatestCalculationId } from '@/services/latest';
 import { formatISODateTime } from '@/utils/dateUtils';
-
-const BATCH_ID = 88; // TODO: Dynamic ID
 
 const getStatusChip = (status: string) => {
   switch (status) {
@@ -33,42 +31,61 @@ const getStatusChip = (status: string) => {
   }
 };
 
-export default function ETLBatchDetails() {
-  const [data, setData] = useState<ETLBatchDetails | null>(null);
+const getCalcTypeLabel = (calcType: string) => {
+  switch (calcType) {
+    case 'full':
+      return 'Полный расчет';
+    case 'gap':
+      return 'ГЭП-анализ';
+    case 'concentration':
+      return 'Концентрация';
+    default:
+      return calcType;
+  }
+};
+
+export default function CalculationDetails() {
+  const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [calcId, setCalcId] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadLatestCalculation = async () => {
       setLoading(true);
-      setError(null);
       try {
-        const response = await getETLBatchDetails(BATCH_ID);
-        if (response) {
-          setData(response);
+        const latestId = await getLatestCalculationId();
+        if (latestId) {
+          setCalcId(latestId);
+          const response = await getCalculationById(latestId);
+          if (response) {
+            setData(response);
+          } else {
+            setError('Не удалось загрузить детали расчета');
+          }
         } else {
-          setError('Не удалось загрузить детали ETL-загрузки');
+          setError('Расчеты не найдены');
         }
       } catch (err) {
         setError('Ошибка при загрузке данных');
-        console.error('ETL Batch Details fetch error:', err);
+        console.error('Calculation Details fetch error:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    loadLatestCalculation();
   }, []);
 
   return (
     <Paper variant="outlined" sx={{ p: 3, width: '100%' }}>
       <Stack spacing={2}>
-      <Stack direction="row" alignItems="center" spacing={1}>
-	  		<CompareArrowsIcon />
-			<Typography variant="h6" fontWeight={600}>
-			  Детали ETL-загрузки #{BATCH_ID}
-			</Typography>
-      </Stack>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <CalculateIcon />
+          <Typography variant="h6" fontWeight={600}>
+            Детали расчета #{calcId || '—'}
+          </Typography>
+        </Stack>
 
         <Divider />
 
@@ -89,9 +106,16 @@ export default function ETLBatchDetails() {
 
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="body2" color="text.secondary">
-                Источник:
+                Тип расчета:
               </Typography>
-              <Typography variant="body2">{data.datasource_name}</Typography>
+              <Typography variant="body2">{getCalcTypeLabel(data.calc_type)}</Typography>
+            </Stack>
+
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2" color="text.secondary">
+                Дата отчета:
+              </Typography>
+              <Typography variant="body2">{formatISODateTime(data.report_date)}</Typography>
             </Stack>
 
             <Stack direction="row" justifyContent="space-between">
@@ -109,22 +133,6 @@ export default function ETLBatchDetails() {
                 <Typography variant="body2">{formatISODateTime(data.finished_at)}</Typography>
               </Stack>
             )}
-
-            <Divider />
-
-            <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" color="text.secondary">
-                Извлечено строк:
-              </Typography>
-              <Typography variant="body2">{data.rows_extracted ?? '—'}</Typography>
-            </Stack>
-
-            <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" color="text.secondary">
-                Загружено строк:
-              </Typography>
-              <Typography variant="body2">{data.rows_loaded ?? '—'}</Typography>
-            </Stack>
 
             {data.error_message && (
               <>

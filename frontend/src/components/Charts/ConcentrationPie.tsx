@@ -20,13 +20,15 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import PercentIcon from '@mui/icons-material/Percent';
 
 import { getConcentration } from '@/services/api';
+import { getLatestCalculationDate } from '@/services/latest';
+import { formatISODate} from '@/utils/dateUtils';
 import { ConcentrationResponse } from '@/types';
 
 export default function ConcentrationPie() {
 	const [data, setData] = useState<ConcentrationResponse | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [reportDate, setReportDate] = useState('2026-06-14');
+	const [reportDate, setReportDate] = useState<string | null>(null);
 	const [category, setCategory] = useState<'liability' | 'asset'>('asset');
 	const [tabValue, setTabValue] = useState(0);
 	
@@ -44,9 +46,18 @@ export default function ConcentrationPie() {
 			setLoading(false);
 		}
 	};
+
+	const loadLatestDate = async () => {
+		const latestDate = await getLatestCalculationDate('concentration');
+		if (latestDate) setReportDate(latestDate);
+	}
 	
 	useEffect(() => {
-		fetchData();
+		loadLatestDate();
+	}, []);
+	
+	useEffect(() => {
+		if (reportDate) fetchData();
 	}, [reportDate, category]);
 
 	const handleTabChange = (
@@ -60,7 +71,7 @@ export default function ConcentrationPie() {
 	const pieData = (data && data.items) ? data.items.map((item, index) => ({
 		id: index,
 		label: `${item.counterparty_name} (${item.share_pct.toFixed(1)}%) `,
-		value: item.amount_rub / 1000,
+		value: item.amount_rub / 1e9,
 	})) : [];
 
 	return (
@@ -78,7 +89,7 @@ export default function ConcentrationPie() {
 			>
 				<PercentIcon />
 				<Typography variant="h5">
-					Концентрация
+					Концентрация 
 				</Typography>
 			</Stack>
 			
@@ -115,7 +126,7 @@ export default function ConcentrationPie() {
 							}}
 						>
 							<Typography variant="h6">
-								<strong>Всего:</strong> {(data.total_amount / 1000).toLocaleString()} ₽
+								<strong>Всего:</strong> {(data.total_amount / 1e9).toFixed(2).toLocaleString()} млрд ₽
 							</Typography>
 							<Typography variant="h6">
 								<strong>Контрагентов:</strong> {data.items.length}
@@ -146,7 +157,7 @@ export default function ConcentrationPie() {
 			)}
 			
 			{data && (!data.items || data.items.length === 0) && (
-				<Alert severity="info">Нет данных за {reportDate}</Alert>
+				<Alert severity="info">Нет данных за {formatISODate(reportDate)}</Alert>
 			)}
 		</Stack>
 	);
