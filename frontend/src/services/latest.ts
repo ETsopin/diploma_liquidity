@@ -47,7 +47,7 @@ export const getLatestReportDate = async (
 		if (!response || !response.items) return null;
 
 		const filtered = response.items.filter(
-			(item) => (item.report_type === reportType) && item.status === 'success'
+			(item) => (item.report_type === reportType || item.report_type === 'full') && item.status === 'success'
 		);
 
 		if (filtered.length === 0) return null;
