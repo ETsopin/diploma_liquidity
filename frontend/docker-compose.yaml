@@ -16,6 +16,24 @@ services:
       - /app/.next
     networks:
       - core_liquidity_net
+  mongo:
+    image: mongo:7
+    container_name: liquidity_mongo_dev
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: mongopass
+      MONGO_INITDB_DATABASE: liquidity
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - core_liquidity_net
+
+volumes:
+  mongo_data: 
 
 networks:
   core_liquidity_net:
