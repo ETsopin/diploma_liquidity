@@ -20,7 +20,10 @@
     "@emotion/styled": "^11.11.0",
     "@emotion/server": "^11.11.0",
 	"@fontsource-variable/inter": "^5.0.0",
-	"@fontsource-variable/inter-tight": "^5.0.0"
+	"@fontsource-variable/inter-tight": "^5.0.0",
+	"mongodb": "^6.0.0",
+	"bcrypt": "^5.1.0",
+	"jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/node": "^20",
