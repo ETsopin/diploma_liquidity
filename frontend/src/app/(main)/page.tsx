@@ -11,6 +11,7 @@ import GapBarChart from '@/components/Charts/GapBarChart';
 import ETLBatchDetails from '@/components/Details/ETLBatchDetails';
 import CalculationDetails from '@/components/Details/CalculationDetails';
 import ReportDetails from '@/components/Details/ReportDetails';
+import ReportsList from '@/components/Lists/ReportsList';
 
 import ArticleIcon from '@mui/icons-material/Article';
 
@@ -20,7 +21,7 @@ import {
 } from '@mui/material';
 
 export default function Home() {
-	const [userName, setUserName] = useState<string | null>(null);
+	const [userName, setUserName] = useState<string | null>('System Administrator');
 	const [userRole, setUserRole] = useState<string | null>('Администратор');
 
 
@@ -67,6 +68,26 @@ export default function Home() {
 				>
 					<TimebucketsDataGrid />
 					<CounterpartiesDataGrid />
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={2}
+					sx={{
+						width: '100%',
+					}}
+				>
+					<Stack
+						direction="row"
+						spacing={1}
+					>
+						<ArticleIcon />
+						<Typography
+							variant="h5"
+						>
+							Отчеты
+						</Typography>
+					</Stack>
+					<ReportsList />
 				</Stack>
 			</ContentStack>
 	);
