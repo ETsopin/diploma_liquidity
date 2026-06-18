@@ -1,4 +1,5 @@
 import clientPromise from './mongodb';
+import { ObjectId } from 'mongodb';
 import { User } from '@/types';
 
 export const findUserByEmail = async (email: string) => {
@@ -10,7 +11,7 @@ export const findUserByEmail = async (email: string) => {
 export const findUserById = async (id: string) => {
 	const client = await clientPromise;
 	const db = client.db('liquidity');
-	return db.collection('users').findOne({_id: id});
+	return db.collection('users').findOne({_id: new ObjectId(id)});
 };
 
 export const createUser = async (userData: {

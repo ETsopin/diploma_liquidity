@@ -14,8 +14,13 @@ export const generateRefreshToken = (payload: JwtPayload): string => {
 
 export const verifyAccessToken = (token: string): JwtPayload | null => {
 	try {
-		return jwt.verify(token, JWT_SECRET) as JwtPayload;
+		console.log('Verifying token:', token.substring(0, 20) + '...');
+		console.log('Using JWT_SECRET:', JWT_SECRET);
+		const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+		console.log('Token verified:', decoded)
+		return decoded;
 	} catch (error) {
+		console.error('Token verification failed:', error);
 		return null;
 	}
 };
