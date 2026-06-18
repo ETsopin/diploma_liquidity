@@ -63,12 +63,26 @@ export async function POST(request: NextRequest) {
 			is_active: user.is_active,
 		};
 
-		return NextResponse.json({
+		const response = NextResponse.json({
 			success: true,
 			user: userResponse,
-			accessToken,
-			refreshToken,
 		});
+
+		response.cookies.set('accessToken', accessToken, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			maxAge: 60 * 60 * 24 * 7, 
+			path: '/',
+		});
+
+		response.cookies.set('refreshToken', refreshToken, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === 'production',
+			maxAge: 60 * 60 * 24 * 30, 
+			path: '/',
+		});
+
+		return response;
 
 	} catch (error) {
 		console.error('Login error:', error);
