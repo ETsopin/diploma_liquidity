@@ -57,8 +57,7 @@ const LEFT_SIDEBAR_ITEMS: Omit<NavIconButtonProps, 'key'>[] = [
 	{icon: AssigmentIcon, label: "Отчеты", href: "/reports"},
 	{icon: LaunchIcon, label: "Расчетное ядро", href: "/core"},
 	{icon: BarChartIcon, label: "Дэшборды", href: "/dashboards"},
-	{icon: AdminPanelSettingsIcon, label: "Пользователи", href: "/users"},
-	{icon: ListAltIcon, label: "Журнал", href: "/logs"},
+	{icon: AdminPanelSettingsIcon, label: "Админ-панель", href: "/admin"},
 ];
 
 export function LeftSidebar() {

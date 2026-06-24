@@ -31,7 +31,6 @@ export default function Home() {
 					direction="row"
 					sx={{
 						justifyContent: 'space-between',
-						py: 2,
 					}}
 				>
 					<Typography variant="h2">{`Добро пожаловать, ${userName}!`}</Typography>
