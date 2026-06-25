@@ -15,3 +15,12 @@ export interface ReportGenerateRequest {
 	report_type: ReportType;
 	report_format: ReportFormat;
 }
+
+export interface CreateUserRequest {
+	email: string;
+	password: string;
+	first_name: string;
+	middle_name?: string;
+	last_name: string;
+	role: 'viewer' | 'analytic' | 'admin';
+}
