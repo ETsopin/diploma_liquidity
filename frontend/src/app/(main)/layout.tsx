@@ -7,29 +7,32 @@ import { Stack, CircularProgress } from '@mui/material';
 
 import Wrapper from '@/components/Layout/Wrapper';
 
+import {  useAuth } from '@/context/AuthContext';
+
 export default function MainLayout({ children }: { children: ReactNode }) {
 	const router = useRouter();
-	const [loading, setLoading] = useState(true);
+	const { user, loading } = useAuth();
 
 	useEffect(() => {
-		const validateToken = async () => {
-			try {
-				const response = await fetch('/api/auth/validate', {
-					credentials: 'include',
-				});
-				console.log('Validate token response:', response);
-				if (!response.ok) {
-					router.push('/auth');
-				}
-			} catch (err) {
-				router.push('/auth');
-			} finally {
-				setLoading(false);
-			}
-		};
+		if (!loading && !user) router.push('/auth');
+	}, [loading, user]);
 
-		validateToken();
-	}, []);
+	if (loading) return (
+		<Stack
+			sx={{
+				width: '100%',
+				height: '100vh',
+				justifyContent: 'center',
+				alignItems: 'center',
+			}}
+		>
+			<CircularProgress />
+		</Stack>
+	);
 
-	return <Wrapper>{children}</Wrapper>;
+	return (
+		<Wrapper>
+			{children}
+		</Wrapper>
+	);
 }

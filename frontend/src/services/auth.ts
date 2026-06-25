@@ -14,6 +14,22 @@ export const findUserById = async (id: string) => {
 	return db.collection('users').findOne({_id: new ObjectId(id)});
 };
 
+export const findAllUsers = async (
+	limit: number = 50,
+	offset: number = 0,
+): Promise<{ items: User[]; total: number }> => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	const collection = db.collection('users');
+
+	const [items, total] = await Promise.all([
+		collection.find({}).sort({ create_at: -1 }).skip(offset).limit(limit).toArray(),
+		collection.countDocuments({}),
+	]);
+
+	return { items, total };
+};
+
 export const createUser = async (userData: {
 	email: string;
 	password_hash: string;
