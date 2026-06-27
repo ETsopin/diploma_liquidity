@@ -48,20 +48,6 @@ export default function Admin() {
 
 			{activeTab === 1 && (
 				<>
-					<Button 
-						variant="contained"
-					   	onClick={() => setDialogOpen(true)}
-						sx={{
-							bgcolor: 'inverse.surface',
-							color: 'inverse.onSurface',
-							'&:hover': {
-								bgcolor: 'inverse.surface',
-								opacity: 0.8,
-							},
-						}}
-					>
-						Создать пользователя
-					</Button>
 					<CreateUserDialog
 						open={dialogOpen}
 						onClose={() => setDialogOpen(false)}
@@ -71,6 +57,7 @@ export default function Admin() {
 					<UsersList 
 						refreshKey={refreshKey}
 						onEditUser={(user) => setEditingUser(user)}
+						onCreateUser={() => setDialogOpen(true)}
 					/>
 					<EditUserDialog
 						open={!!editingUser}

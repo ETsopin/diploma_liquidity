@@ -74,16 +74,6 @@ export default function Home() {
 						width: '100%',
 					}}
 				>
-					<TimebucketsDataGrid />
-					<CounterpartiesDataGrid />
-				</Stack>
-				<Stack
-					direction="column"
-					spacing={2}
-					sx={{
-						width: '100%',
-					}}
-				>
 					<Stack
 						direction="row"
 						spacing={1}
@@ -96,6 +86,16 @@ export default function Home() {
 						</Typography>
 					</Stack>
 					<ReportsList />
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={2}
+					sx={{
+						width: '100%',
+					}}
+				>
+					<TimebucketsDataGrid />
+					<CounterpartiesDataGrid />
 				</Stack>
 			</ContentStack>
 	);

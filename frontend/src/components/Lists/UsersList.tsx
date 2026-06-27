@@ -15,12 +15,14 @@ import {
 	Avatar,
 	Chip,
 	CircularProgress,
+	Tooltip,
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import LoopIcon from '@mui/icons-material/Loop';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 
 const ROLE_LABELS: Record<string, string> = {
@@ -32,10 +34,11 @@ const ROLE_LABELS: Record<string, string> = {
 interface UsersListProps {
 	refreshKey?: number;
 	onEditUser?: (user: User) => void;
+	onCreateUser?: () => void;
 }
 
 export default function UsersList(
-	{refreshKey = 0, onEditUser}: UsersListProps
+	{refreshKey = 0, onEditUser, onCreateUser}: UsersListProps
 ) {
 	const [users, setUsers] = useState<User[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -130,9 +133,19 @@ export default function UsersList(
 				<IconButton
 					onClick={fetchUsers}
 					size='small'
+					color='tertiary'
 				>
 					<LoopIcon />
 				</IconButton>
+				<Tooltip 
+					title="Создать пользователя"
+					placement="right"
+					color="primary"
+				>
+					<IconButton onClick={onCreateUser}>
+						<PersonAddIcon />
+					</IconButton>
+				</Tooltip>
 			</Stack>
 			<List>
 				{users.map((user) => (

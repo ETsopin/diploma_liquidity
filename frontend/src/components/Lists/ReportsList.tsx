@@ -142,6 +142,7 @@ export default function ReportsList() {
 				<IconButton
 					onClick={fetchReports}
 					size='small'
+					color='tertiary'
 				>
 					<LoopIcon />
 				</IconButton>
