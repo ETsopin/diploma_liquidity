@@ -244,7 +244,11 @@ export default function ReportForm() {
 				variant="contained"
 				sx={{
 					bgcolor: 'inverse.surface',
-					color: 'inverse.onSurface',	
+					color: 'inverse.onSurface',
+					'&:hover': {
+						bgcolor: 'inverse.surface',
+						opacity: 0.8,
+					},
 				}}
 				onClick={() => {console.log(formData);}}
 			>

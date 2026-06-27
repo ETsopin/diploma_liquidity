@@ -48,7 +48,18 @@ export default function Admin() {
 
 			{activeTab === 1 && (
 				<>
-					<Button variant="contained" onClick={() => setDialogOpen(true)}>
+					<Button 
+						variant="contained"
+					   	onClick={() => setDialogOpen(true)}
+						sx={{
+							bgcolor: 'inverse.surface',
+							color: 'inverse.onSurface',
+							'&:hover': {
+								bgcolor: 'inverse.surface',
+								opacity: 0.8,
+							},
+						}}
+					>
 						Создать пользователя
 					</Button>
 					<CreateUserDialog

@@ -14,6 +14,7 @@ import {
 	Typography,
 	Avatar,
 	Chip,
+	CircularProgress,
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -133,7 +134,6 @@ export default function UsersList(
 					<LoopIcon />
 				</IconButton>
 			</Stack>
-
 			<List>
 				{users.map((user) => (
 					<ListItem
