@@ -64,6 +64,15 @@ export const createUser = async (userData: {
 	return { ...newUser, _id: result.insertedId };
 };
 
+export const changeUserActivity = async (id: string, activity: boolean, ) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	return db.collection('users').updateOne(
+		{ _id: new ObjectId(id) },
+		{ $set: { is_active: activity, 'audit.updated_at': new Date(), 'audit.updated_by': 'admin' } }
+	);
+};
+
 export const updateRefreshToken = async (email: string, refreshToken: string | null) => {
 	const client = await clientPromise;
 	const db = client.db('liquidity');

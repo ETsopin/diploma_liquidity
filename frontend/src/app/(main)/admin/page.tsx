@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import ContentStack from '@/components/Layout/ContentStack';
 import CreateUserDialog from '@/components/Forms/CreateUserDialog';
+import UsersList from '@/components/Lists/UsersList';
 
 import {
 	Stack,
@@ -50,6 +51,8 @@ export default function Admin() {
 						onClose={() => setDialogOpen(false)}
 						onUserCreated={() => {}}
 					/>
+
+					<UsersList />
 				</>
 			)}
 	    </ContentStack>

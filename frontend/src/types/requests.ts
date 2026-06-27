@@ -22,5 +22,13 @@ export interface CreateUserRequest {
 	first_name: string;
 	middle_name?: string;
 	last_name: string;
-	role: 'viewer' | 'analytic' | 'admin';
+	role: 'viewer' | 'analyst' | 'admin';
+}
+
+export interface UpdateUserRequest {
+	first_name?: string;
+	middle_name?: string;
+	last_name?: string;
+	role?: 'viewer' | 'analyst' | 'admin';
+	is_active?: boolean;
 }

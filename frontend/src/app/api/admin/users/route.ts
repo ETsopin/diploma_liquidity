@@ -14,7 +14,11 @@ export async function GET(request: NextRequest) {
 
 	if (payload.role !== 'admin') return NextResponse.json({ message: 'Доступ запрещен' }, { status: 403 });
 
-	const result = await findAllUsers();
+	const { searchParams } = new URL(request.url);
+	const limit = Math.min(Number(searchParams.get('limit')) || 50, 100);
+	const offset = Number(searchParams.get('offset')) || 0;
+
+	const result = await findAllUsers(limit, offset);
 	return NextResponse.json(result);
 };
 
