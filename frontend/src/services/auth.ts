@@ -64,6 +64,33 @@ export const createUser = async (userData: {
 	return { ...newUser, _id: result.insertedId };
 };
 
+export const updateUserById = async (
+	id: string,
+	data: {
+		first_name?: string;
+		middle_name?: string;
+		last_name?: string;
+		role?: 'admin' | 'analyst' | 'viewer';
+		is_active?: boolean;
+		password_hash?: string;
+	}
+) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+
+	const updateFields: Record<string, any> = {
+		...data,
+		'audit.updated_at': new Date(),
+		'audit.updated_by': 'admin',
+	};
+
+	return db.collection('users').findOneAndUpdate(
+		{ _id: new ObjectId(id) },
+		{ $set: updateFields },
+		{ returnDocument: 'after'}
+	);
+};
+
 export const changeUserActivity = async (id: string, activity: boolean, ) => {
 	const client = await clientPromise;
 	const db = client.db('liquidity');

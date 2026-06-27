@@ -21,13 +21,21 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import LoopIcon from '@mui/icons-material/Loop';
 
+
 const ROLE_LABELS: Record<string, string> = {
 	admin: 'Администратор',
 	analyst: 'Аналитик',
 	viewer: 'Пользователь',
 };
 
-export default function UsersList() {
+interface UsersListProps {
+	refreshKey?: number;
+	onEditUser?: (user: User) => void;
+}
+
+export default function UsersList(
+	{refreshKey = 0, onEditUser}: UsersListProps
+) {
 	const [users, setUsers] = useState<User[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -55,7 +63,7 @@ export default function UsersList() {
 		}
 	};
 
-	useEffect(() => {fetchUsers();}, [limit, offset]);
+	useEffect(() => {fetchUsers();}, [limit, offset, refreshKey]);
 
 	const getInitials = (user: User) => (user.last_name?.[0] || '?').toUpperCase();
 
@@ -82,7 +90,7 @@ export default function UsersList() {
 					variant="body2"
 					color="text.secondary"
 				>
-					Неизвестно
+					Последний вход: Неизвестно
 				</Typography>
 		);
 	};
@@ -102,7 +110,7 @@ export default function UsersList() {
 					disabled={offset === 0}
 					size="small"
 				>
-					<ChevronLeftIcon />`
+					<ChevronLeftIcon />
 				</IconButton>
 				<IconButton
 					onClick={() => setOffset(o => o + limit)}
@@ -132,7 +140,7 @@ export default function UsersList() {
 					  key={String(user._id)}
 					  divider
 					  secondaryAction={
-						<IconButton edge="end" disabled>
+						<IconButton edge="end" onClick={() => onEditUser?.(user)}>
 						  <EditIcon />
 						</IconButton>
 					  }

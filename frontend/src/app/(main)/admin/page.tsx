@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 
+import { User } from '@/types';
+
 import ContentStack from '@/components/Layout/ContentStack';
 import CreateUserDialog from '@/components/Forms/CreateUserDialog';
 import UsersList from '@/components/Lists/UsersList';
+import EditUserDialog from '@/components/Forms/EditUserDialog';
 
 import {
 	Stack,
@@ -17,6 +20,8 @@ import {
 export default function Admin() {
 	const [activeTab, setActiveTab] = useState(0);
 	const [dialogOpen, setDialogOpen] = useState(false);
+	const [refreshKey, setRefreshKey] = useState(0);
+	const [editingUser, setEditingUser] = useState<User | null>(null);
 
 	const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
 		setActiveTab(newValue);
@@ -49,10 +54,19 @@ export default function Admin() {
 					<CreateUserDialog
 						open={dialogOpen}
 						onClose={() => setDialogOpen(false)}
-						onUserCreated={() => {}}
+						onUserCreated={() => {setRefreshKey(prev => prev + 1);}}
 					/>
 
-					<UsersList />
+					<UsersList 
+						refreshKey={refreshKey}
+						onEditUser={(user) => setEditingUser(user)}
+					/>
+					<EditUserDialog
+						open={!!editingUser}
+						user={editingUser}
+						onClose={() => setEditingUser(null)}
+						onUserUpdated={() => setRefreshKey(prev => prev + 1)}
+					/>
 				</>
 			)}
 	    </ContentStack>
