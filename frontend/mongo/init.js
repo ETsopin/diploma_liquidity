@@ -292,7 +292,7 @@ db.dashboards.createIndex({ is_template: 1 });
 
 db.users.insertOne({
 	email: 'admin@system.com',
-	password_hash: '$2b$12$Qn7T8XqY1Z2a3b4c5d6e7f', // admin123
+	password_hash: '$2b$12$coOaXtC60HVCUmwC5/JC3OjZfEo3P2g/NcjZ1TJrtuR73idk/sUnu', // admin123
 	first_name: 'Sys',
 	middle_name: 'Tem',
 	last_name: 'Administrator',
