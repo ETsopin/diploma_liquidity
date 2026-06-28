@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { verifyAccessToken } from '@/services/jwt';
 import { findUserById, updateUserById, changeUserActivity } from '@/services/auth';
+
+import { getRequestMeta, logAction } from '@/services/logger';
+
 import bcrypt from 'bcrypt';
 
 export async function GET(request: NextRequest, {params} : { params: { id: string }}) {
@@ -43,6 +47,20 @@ export async function PUT(request: NextRequest, { params } : { params: {id: stri
 		const updated = await updateUserById(params.id, updateData);
 		if (!updated) return NextResponse.json( { message: 'Пользователь не найден'}, { status: 404 });
 
+		const meta = getRequestMeta(request);
+		logAction({
+			userId: payload.userId,
+			email: payload.email,
+			role: payload.role,
+			action: 'user_update',
+			entity: 'user',
+			entityId: params.id,
+			status: 'success',
+			ip: meta.ip,
+			userAgent: meta.userAgent,
+			details: updateData,
+		}).catch(err => console.error('Log user update error:', err));
+
 		const {password_hash, refresh_token, sessions, ...safeUser } = updated;
 		return NextResponse.json(safeUser);
 	
@@ -61,5 +79,19 @@ export async function DELETE(request: NextRequest, { params }: { params: {id: st
 	if (payload.role !== 'admin') return NextResponse.json({ message: 'Доступ запрещен' }, { status: 403 });
 
 	await changeUserActivity(params.id, false);
+
+	const meta = getRequestMeta(request);
+	logAction({
+		userId: payload.userId,
+		email: payload.email,
+		role: payload.role,
+		action: 'user_delete',
+		entity: 'user',
+		entityId: params.id,
+		status: 'success',
+		ip: meta.ip,
+		userAgent: meta.userAgent,
+	}).catch(err => console.error('Log user deactivate error:', err));
+
 	return NextResponse.json({ message: 'Пользователь деактивирован'});
 }

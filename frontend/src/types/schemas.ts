@@ -89,3 +89,19 @@ export interface CounterpartyInfo {
   counterparty_type: CounterpartyType;
   country: string;
 }
+
+export interface LogRecord {
+	_id: string;
+	user_id: string;
+	user_email: string | null;
+	user_role: string | null;
+	action: string;
+	entity: string | null;
+	entity_id: string | null;
+	status: string;
+	timestamp: string;
+	ip: string | null;
+	user_agent: string | null;
+	details: Record<string, any> | null;
+	error: string | null;
+}

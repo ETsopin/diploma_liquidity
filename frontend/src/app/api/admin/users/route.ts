@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { verifyAccessToken } from '@/services/jwt';
 import { findAllUsers, findUserByEmail, createUser } from '@/services/auth';
+import { getRequestMeta, logAction } from '@/services/logger';
 
 import bcrypt from 'bcrypt';
 
@@ -51,6 +53,20 @@ export async function POST(request: NextRequest) {
 
     const password_hash = await bcrypt.hash(password, 12);
     const created = await createUser({ email, password_hash, first_name, middle_name, last_name, role: role || 'viewer' });
+
+	const meta = getRequestMeta(request);
+	logAction({
+		userId: payload.userId,
+		email: payload.email,
+		role: payload.role,
+		action: 'user_create',
+		entity: 'user',
+		entityId: String(created._id),
+		status: 'success',
+		ip: meta.ip,
+		userAgent: meta.userAgent,
+		details: { email, first_name, last_name, role },
+	}).catch(err => console.error('Log create user error:', err));
 
     const { password_hash: _, refresh_token, sessions, ...safeUser } = created;
     return NextResponse.json(safeUser, { status: 201 });

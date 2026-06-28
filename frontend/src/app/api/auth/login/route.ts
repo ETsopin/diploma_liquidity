@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 import { findUserByEmail, updateLastLogin, updateRefreshToken } from '@/services/auth';
 import { generateAccessToken, generateRefreshToken } from '@/services/jwt';
 
+import { logAction, getRequestMeta } from '@/services/logger';
+
 export async function POST(request: NextRequest) {
 	try {
 		const body = await request.json();
@@ -81,6 +83,18 @@ export async function POST(request: NextRequest) {
 			maxAge: 60 * 60 * 24 * 30, 
 			path: '/',
 		});
+
+		const meta = getRequestMeta(request);
+		logAction({
+			userId: user._id.toString(),
+			email: user.email,
+			role: user.role,
+			action: 'login',
+			entity: 'system',
+			status: 'success',
+			ip: meta.ip,
+			userAgent: meta.userAgent,
+		}).catch(err => console.error('Log login error:', err))
 
 		return response;
 

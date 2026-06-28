@@ -32,3 +32,12 @@ export interface UpdateUserRequest {
 	role?: 'viewer' | 'analyst' | 'admin';
 	is_active?: boolean;
 }
+
+export interface CreateLogRequest {
+	action: string;
+	entity?: string;
+	entity_id?: string;
+	status?: 'success' | 'error' | 'pending';
+	details?: Record<string, any>;
+	error?: string;
+}
