@@ -9,6 +9,9 @@ import CreateUserDialog from '@/components/Forms/CreateUserDialog';
 import UsersList from '@/components/Lists/UsersList';
 import EditUserDialog from '@/components/Forms/EditUserDialog';
 import LogsDataGrid from '@/components/DataGrids/LogsDataGrid';
+import SystemTimelineChart from '@/components/Charts/SystemTimelineChart';
+import UserActivityPie from '@/components/Charts/UserActivityPie';
+import SystemStatCards from '@/components/Cards/SystemStatCards';
 
 import {
 	Stack,
@@ -19,6 +22,7 @@ import {
 } from '@mui/material';
 
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+
 
 export default function Admin() {
 	const [activeTab, setActiveTab] = useState(0);
@@ -59,12 +63,20 @@ export default function Admin() {
 				>
 					<Stack
 						direction="row"
+						spacing={2}
+					>
+						<SystemTimelineChart />
+						<UserActivityPie />
+					</Stack>
+					<SystemStatCards />
+					<Stack
+						direction="row"
 						spacing={1}
 						alignItems="center"
 					>
-						<HistoryEduIcon fontSize="large" />
+						<HistoryEduIcon />
 						<Typography
-							variant="h4"
+							variant="h5"
 						>
 							Журнал действий
 						</Typography>
