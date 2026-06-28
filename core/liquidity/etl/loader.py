@@ -15,6 +15,7 @@ from datetime import date
 from typing import Any, Literal
 
 import pandas as pd
+from psycopg2.extras import execute_values
 from sqlalchemy import text
 
 from liquidity.db import dwh_session
@@ -77,45 +78,42 @@ class Loader:
         inserted_ids: list[int] = []
         rows = df.to_dict("records")
 
+        # Формируем все строки разом и грузим одной пакетной вставкой execute_values
+        values = []
+        for r in rows:
+            raw_data = r.get("raw_data") or {}
+            values.append((
+                batch_id,
+                _clean(r.get("raw_contract_id")),
+                _clean(r.get("counterparty_code")),
+                _clean(r.get("product_code")),
+                _clean(r.get("amount")),
+                _clean(r.get("currency")) or "RUB",
+                _clean(r.get("maturity_date")),
+                _clean(r.get("issue_date")),
+                _clean(r.get(type_col) or r.get("product_code")),
+                json.dumps(raw_data, default=str),
+                False,
+                _clean(r.get("source_system")) or "",
+            ))
+
         with dwh_session() as session:
             conn = session.get_bind().raw_connection()
             cur = conn.cursor()
             try:
-                for i in range(0, len(rows), _BATCH_SIZE):
-                    batch = rows[i : i + _BATCH_SIZE]
-                    values = []
-                    for r in batch:
-                        raw_data = r.get("raw_data") or {}
-                        values.append((
-                            batch_id,
-                            _clean(r.get("raw_contract_id")),
-                            _clean(r.get("counterparty_code")),
-                            _clean(r.get("product_code")),
-                            _clean(r.get("amount")),
-                            _clean(r.get("currency")) or "RUB",
-                            _clean(r.get("maturity_date")),
-                            _clean(r.get("issue_date")),
-                            _clean(r.get(type_col) or r.get("product_code")),
-                            json.dumps(raw_data, default=str),
-                            False,
-                            _clean(r.get("source_system")) or "",
-                        ))
-
-                    cur.executemany(
-                        f"""
-                        INSERT INTO {table} (
-                            batch_id, raw_contract_id, counterparty_code, product_code,
-                            amount, currency, maturity_date, issue_date, {type_col},
-                            raw_data, is_processed, source_system
-                        ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s::jsonb,%s,%s)
-                        RETURNING id
-                        """,
-                        values,
-                    )
-                    # psycopg2 executemany с RETURNING возвращает только последний
-                    # Используем fetchall после каждой строки через execute в цикле
-                    # Переделаем на execute_values для получения всех id
-
+                execute_values(
+                    cur,
+                    f"""
+                    INSERT INTO {table} (
+                        batch_id, raw_contract_id, counterparty_code, product_code,
+                        amount, currency, maturity_date, issue_date, {type_col},
+                        raw_data, is_processed, source_system
+                    ) VALUES %s
+                    """,
+                    values,
+                    template="(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s::jsonb,%s,%s)",
+                    page_size=_BATCH_SIZE,
+                )
                 conn.commit()
             except Exception:
                 conn.rollback()
@@ -177,45 +175,45 @@ class Loader:
         rows = df.to_dict("records")
         inserted = 0
 
+        values = []
+        for r in rows:
+            values.append((
+                _clean(r.get("staging_id")),
+                batch_id,
+                _clean(r.get("counterparty_id")),
+                _clean(r.get("product_type_id")),
+                _clean(r.get("contract_number")),
+                _clean(r.get("amount")),
+                _clean(r.get("amount_rub")),
+                _clean(r.get("currency")) or "RUB",
+                _clean(r.get("exchange_rate")) or 1.0,
+                _clean(r.get("issue_date")),
+                _clean(r.get("maturity_date")),
+                _clean(r.get("timebucket_id")),
+                _clean(r.get("days_to_maturity")),
+                _clean(r.get("report_date")),
+                r.get("is_valid", True),
+                _clean(r.get("validation_notes")),
+            ))
+
         with dwh_session() as session:
             conn = session.get_bind().raw_connection()
             cur = conn.cursor()
             try:
-                for i in range(0, len(rows), _BATCH_SIZE):
-                    batch = rows[i : i + _BATCH_SIZE]
-                    values = []
-                    for r in batch:
-                        values.append((
-                            _clean(r.get("staging_id")),
-                            batch_id,
-                            _clean(r.get("counterparty_id")),
-                            _clean(r.get("product_type_id")),
-                            _clean(r.get("contract_number")),
-                            _clean(r.get("amount")),
-                            _clean(r.get("amount_rub")),
-                            _clean(r.get("currency")) or "RUB",
-                            _clean(r.get("exchange_rate")) or 1.0,
-                            _clean(r.get("issue_date")),
-                            _clean(r.get("maturity_date")),
-                            _clean(r.get("timebucket_id")),
-                            _clean(r.get("days_to_maturity")),
-                            _clean(r.get("report_date")),
-                            r.get("is_valid", True),
-                            _clean(r.get("validation_notes")),
-                        ))
-
-                    cur.executemany(
-                        f"""
-                        INSERT INTO {table} (
-                            staging_id, batch_id, counterparty_id, product_type_id,
-                            contract_number, amount, amount_rub, currency, exchange_rate,
-                            issue_date, maturity_date, timebucket_id, days_to_maturity,
-                            report_date, is_valid, validation_notes
-                        ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                        """,
-                        values,
-                    )
-                    inserted += len(batch)
+                execute_values(
+                    cur,
+                    f"""
+                    INSERT INTO {table} (
+                        staging_id, batch_id, counterparty_id, product_type_id,
+                        contract_number, amount, amount_rub, currency, exchange_rate,
+                        issue_date, maturity_date, timebucket_id, days_to_maturity,
+                        report_date, is_valid, validation_notes
+                    ) VALUES %s
+                    """,
+                    values,
+                    page_size=_BATCH_SIZE,
+                )
+                inserted = len(values)
 
                 # Помечаем строки staging как обработанные
                 if staging_ids:

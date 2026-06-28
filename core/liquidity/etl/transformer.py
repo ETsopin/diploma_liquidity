@@ -234,7 +234,8 @@ class Transformer:
             return df
 
         staging_rows = []
-        for _, row in df.iterrows():
+        # to_dict("records") вместо iterrows — на порядок быстрее на больших объёмах
+        for row in df.to_dict("records"):
             # Резолвим контрагента до канонического кода.
             # Приоритет: ИНН (самый надёжный) > код из АБС > полное имя > краткое имя.
             inn  = row.get("counterparty_inn")
@@ -290,7 +291,8 @@ class Transformer:
         dwh_rows = []
         validation_errors = 0
 
-        for _, row in staging_df.iterrows():
+        # to_dict("records") вместо iterrows — на порядок быстрее на больших объёмах
+        for row in staging_df.to_dict("records"):
             product_code = row.get("product_code")
             counterparty_code = row.get("counterparty_code")
             currency = str(row.get("currency", "RUB")).upper()
