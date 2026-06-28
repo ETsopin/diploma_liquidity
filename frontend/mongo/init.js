@@ -6,6 +6,7 @@ db.createUser({
 
 db = db.getSiblingDB('liquidity');
 
+
 //
 // Users Collection
 //
@@ -61,6 +62,7 @@ db.createCollection('users', {
 	}
 });
 
+
 //
 // Logs Collection
 //
@@ -107,6 +109,164 @@ db.createCollection('logs', {
 
 
 //
+// Dashboards Collection
+// 
+
+db.createCollection('dashboards', {
+	validator: {
+		$jsonSchema: {
+			bsonType: 'object',
+			required: ['title', 'owner_id', 'owner_email', 'sharing', 'widgets', 'created_at', 'updated_at'],
+			properties: {
+				title: { bsonType: 'string' },
+				description: { bsonType: 'string' },
+				owner_id: { bsonType: 'objectId' },
+				owner_email: { bsonType: 'string' },
+				is_template: { bsonType: 'bool' },
+				template_slug: { enum: ['gap_analysis', 'concentration', 'full_report', 'empty', null] },
+				sharing: {
+					bsonType: 'object',
+					required: ['mode', 'shared_with'],
+					properties: {
+						mode: { enum: ['private', 'shared'] },
+						shared_with: { bsonType: 'array', items: { bsonType: 'objectId' } },
+					},
+				},
+				widgets: {
+					bsonType: 'array',
+					items: {
+						bsonType: 'object',
+						required: ['id', 'type', 'title', 'layout', 'config'],
+						properties: {
+							id: { bsonType: 'string' },
+							type: { enum: ['concentration_pie', 'gap_bar', 'gap_trend', 'concentration_trend', 'comparison_bar', 'kpi_row', 'report_table'] },
+							title: { bsonType: 'string' },
+							layout: {
+								bsonType: 'object',
+								required: ['x', 'y', 'w', 'h'],
+								properties: {
+									x: { bsonType: 'int' },
+									y: { bsonType: 'int' },
+									w: { bsonType: 'int' },
+									h: { bsonType: 'int' },
+								},
+							},
+							config: { bsonType: 'object' },
+						},
+					},
+				},
+				created_at: { bsonType: 'date' },
+				updated_at: { bsonType: 'date' },
+			},
+		},
+	},
+});
+
+
+//
+// Dashboards Templates Seeds
+//
+
+db.dashboards.insertMany([
+	{
+		title: 'GAP-анализ',
+		description: 'Анализ разрыва ликвидности по временным корзинам',
+		owner_id: ObjectId('000000000000000000000000'),
+		owner_email: 'system',
+		is_template: true,
+		template_slug: 'gap_analysis',
+		sharing: { mode: 'shared', shared_with: [] },
+		widgets: [
+			{
+				id: 'w1', type: 'kpi_row', title: 'Ключевые метрики',
+				layout: { x: 0, y: 0, w: 12, h: 1 }, config: {},
+			},
+			{
+				id: 'w2', type: 'gap_bar', title: 'GAP по корзинам',
+				layout: { x: 0, y: 1, w: 6, h: 4 }, config: {},
+			},
+			{
+				id: 'w3', type: 'gap_trend', title: 'Динамика GAP',
+				layout: { x: 6, y: 1, w: 6, h: 4 }, config: { days: 30 },
+			},
+		],
+		created_at: new Date(),
+		updated_at: new Date(),
+	},
+	{
+		title: 'Концентрация',
+		description: 'Анализ концентрации активов и обязательств',
+		owner_id: ObjectId('000000000000000000000000'),
+		owner_email: 'system',
+		is_template: true,
+		template_slug: 'concentration',
+		sharing: { mode: 'shared', shared_with: [] },
+		widgets: [
+			{
+				id: 'w1', type: 'concentration_pie', title: 'Концентрация',
+				layout: { x: 0, y: 0, w: 6, h: 5 }, config: {},
+			},
+			{
+				id: 'w2', type: 'report_table', title: 'Таблица концентрации',
+				layout: { x: 6, y: 0, w: 6, h: 5 }, config: {},
+			},
+			{
+				id: 'w3', type: 'concentration_trend', title: 'Динамика концентрации',
+				layout: { x: 0, y: 5, w: 12, h: 4 }, config: { days: 30 },
+			},
+		],
+		created_at: new Date(),
+		updated_at: new Date(),
+	},
+	{
+		title: 'Полный отчёт',
+		description: 'Все доступные визуализации в одном дашборде',
+		owner_id: ObjectId('000000000000000000000000'),
+		owner_email: 'system',
+		is_template: true,
+		template_slug: 'full_report',
+		sharing: { mode: 'shared', shared_with: [] },
+		widgets: [
+			{
+				id: 'w1', type: 'kpi_row', title: 'Ключевые метрики',
+				layout: { x: 0, y: 0, w: 12, h: 1 }, config: {},
+			},
+			{
+				id: 'w2', type: 'gap_bar', title: 'GAP по корзинам',
+				layout: { x: 0, y: 1, w: 6, h: 4 }, config: {},
+			},
+			{
+				id: 'w3', type: 'concentration_pie', title: 'Концентрация',
+				layout: { x: 6, y: 1, w: 6, h: 4 }, config: {},
+			},
+			{
+				id: 'w4', type: 'gap_trend', title: 'Динамика GAP',
+				layout: { x: 0, y: 5, w: 6, h: 4 }, config: { days: 30 },
+			},
+			{
+				id: 'w5', type: 'concentration_trend', title: 'Динамика концентрации',
+				layout: { x: 6, y: 5, w: 6, h: 4 }, config: { days: 30 },
+			},
+		],
+		created_at: new Date(),
+		updated_at: new Date(),
+	},
+	{
+		title: 'Пустой дашборд',
+		description: 'Начните с чистого листа',
+		owner_id: ObjectId('000000000000000000000000'),
+		owner_email: 'system',
+		is_template: true,
+		template_slug: 'empty',
+		sharing: { mode: 'shared', shared_with: [] },
+		widgets: [],
+		created_at: new Date(),
+		updated_at: new Date(),
+	},
+]);
+
+
+//
 // Indexes
 //
 
@@ -121,13 +281,18 @@ db.logs.createIndex({ entity: 1, entity_id: 1 });
 db.logs.createIndex({ timestamp: -1 });
 db.logs.createIndex({ timestamp: 1 }, { expireAfterSeconds: 2592000 }); 
 
+db.dashboards.createIndex({ owner_id: 1 });
+db.dashboards.createIndex({ 'sharing.mode': 1, 'sharing.shared_with': 1 });
+db.dashboards.createIndex({ is_template: 1 });
+
+
 //
 // Test User
 //
 
 db.users.insertOne({
 	email: 'admin@system.com',
-	password_hash: '$2b$12$Qn7T8XqY1Z2a3b4c5d6e7f', // admin123
+	password_hash: '$2b$12$coOaXtC60HVCUmwC5/JC3OjZfEo3P2g/NcjZ1TJrtuR73idk/sUnu', // admin123
 	first_name: 'Sys',
 	middle_name: 'Tem',
 	last_name: 'Administrator',
