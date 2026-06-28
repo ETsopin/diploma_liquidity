@@ -95,8 +95,23 @@ export default function ReportForm() {
 			}
 
 			setSuccess(data.message);
-			console.log('API Response:', data);
 
+			fetch('/api/logs', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					action: 'generate_report',
+					entity: 'report',
+					status: 'success',
+					details: {
+						report_date: payload.report_date,
+						report_type: payload.report_type,
+						report_format: payload.report_format,
+					},
+				}),
+			}).catch(() => {});
+
+			// console.log('API Response:', data);
 			// setTimeout(() => setSuccess(false), 5000);
 		
 		} catch (err) {

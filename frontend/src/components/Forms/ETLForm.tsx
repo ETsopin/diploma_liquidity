@@ -86,8 +86,23 @@ export default function ETLForm() {
 			setSuccess(
 				`ETL-процесс успешно завершен! (ID: ${data.batch_id}, загружено: ${data.assets_loaded})`
 			);
-			console.log('API Response:', data);
 
+			fetch('/api/logs', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json'},
+				body: JSON.stringify({
+					action: 'run_etl',
+					entity: 'etl',
+					entity_id: String(data.batch_id),
+					status: 'success',
+					details: {
+						report_date: payload.report_date,
+						source: payload.source,
+					}
+				}),
+			}).catch(() => {});
+
+			// console.log('API Response:', data);
 			// setTimeout(() => setSuccess(false), 5000);
 		
 		} catch (err) {

@@ -86,8 +86,23 @@ export default function CalculateForm() {
 			setSuccess(
 				`Расчет успешно выполнен! (ID: ${data.calculation_id})`
 			);
-			console.log('API Response:', data);
 
+			fetch('/api/logs', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					action: 'run_calculation',
+					entity: 'calculation',
+					entity_id: String(data.calculation_id),
+					status: 'success',
+					details: {
+						report_date: payload.report_date,
+						calc_type: payload.calc_type
+					},
+				}),
+			}).catch(() => {});
+
+			// console.log('API Response:', data);
 			// setTimeout(() => setSuccess(null), 5000);
 		
 		} catch (err) {

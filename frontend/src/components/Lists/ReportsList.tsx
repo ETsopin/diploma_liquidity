@@ -86,6 +86,17 @@ export default function ReportsList() {
 			document.body.appendChild(link);
 			link.click();
 
+			fetch('/api/logs', {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify({
+					action: 'download_report',
+					entity: 'report',
+					entity_id: String(taskId),
+					status: 'success',
+				}),
+			}).catch(() => {});
+
 			link.remove();
 			window.URL.revokeObjectURL(url);
 		} catch (err) {

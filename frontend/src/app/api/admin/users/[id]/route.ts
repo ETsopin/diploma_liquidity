@@ -47,6 +47,8 @@ export async function PUT(request: NextRequest, { params } : { params: {id: stri
 		const updated = await updateUserById(params.id, updateData);
 		if (!updated) return NextResponse.json( { message: 'Пользователь не найден'}, { status: 404 });
 
+		const { password_hash: _, ...safeDetails } = updateData;
+
 		const meta = getRequestMeta(request);
 		logAction({
 			userId: payload.userId,
@@ -58,7 +60,7 @@ export async function PUT(request: NextRequest, { params } : { params: {id: stri
 			status: 'success',
 			ip: meta.ip,
 			userAgent: meta.userAgent,
-			details: updateData,
+			details: safeDetails,
 		}).catch(err => console.error('Log user update error:', err));
 
 		const {password_hash, refresh_token, sessions, ...safeUser } = updated;
