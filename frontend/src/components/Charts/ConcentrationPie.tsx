@@ -20,7 +20,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import PercentIcon from '@mui/icons-material/Percent';
 
 import { getConcentration } from '@/services/api';
-import { getLatestCalculationDate } from '@/services/latest';
+import { getLatestReportDate } from '@/services/latest';
 import { formatISODate} from '@/utils/dateUtils';
 import { ConcentrationResponse } from '@/types';
 
@@ -48,7 +48,7 @@ export default function ConcentrationPie() {
 	};
 
 	const loadLatestDate = async () => {
-		const latestDate = await getLatestCalculationDate('concentration');
+		const latestDate = await getLatestReportDate('concentration');
 		if (latestDate) setReportDate(latestDate);
 	}
 	
@@ -68,11 +68,36 @@ export default function ConcentrationPie() {
 		setCategory(newValue === 0 ? 'asset' : 'liability');
 	}
 	
-	const pieData = (data && data.items) ? data.items.map((item, index) => ({
-		id: index,
-		label: `${item.counterparty_name} (${item.share_pct.toFixed(1)}%) `,
-		value: item.amount_rub / 1e9,
-	})) : [];
+	// const pieData = (data && data.items) ? data.items.map((item, index) => ({
+	// 	id: index,
+	// 	label: `${item.counterparty_name} (${item.share_pct.toFixed(1)}%) `,
+	// 	value: item.amount_rub / 1e9,
+	// })) : [];
+
+	const aggregatedPieData = (data && data.items)
+		? data.items
+			.reduce((acc, item) => {
+				const existing = acc.find((el) => el.counterparty_code === item.counterparty_code);
+				if (existing) {
+					existing.amount_rub += item.amount_rub;
+					existing.share_pct += item.share_pct;
+				} else {
+					acc.push({
+						counterparty_code: item.counterparty_code,
+						counterparty_name: item.counterparty_name,
+						amount_rub: item.amount_rub,
+						share_pct: item.share_pct,
+					});
+				}
+				return acc;
+			}, [] as { counterparty_code: string; counterparty_name: string; amount_rub: number; share_pct: number }[])
+			.map((item, index) => ({
+				id: index,
+				label: `${item.counterparty_name} (${item.share_pct.toFixed(1)}%)`,
+				value: item.amount_rub / 1e9,
+			}))
+		: [];
+
 
 	return (
 		<Stack 
@@ -129,7 +154,7 @@ export default function ConcentrationPie() {
 								<strong>Всего:</strong> {(data.total_amount / 1e9).toFixed(2).toLocaleString()} млрд ₽
 							</Typography>
 							<Typography variant="h6">
-								<strong>Контрагентов:</strong> {data.items.length}
+								<strong>Контрагентов:</strong> {aggregatedPieData.length}
 							</Typography>
 						</Stack>
 					</Stack>
@@ -137,7 +162,7 @@ export default function ConcentrationPie() {
 					<PieChart
 						series={[
 							{
-								data: pieData,
+								data: aggregatedPieData,
 								outerRadius: 120,
 								paddingAngle: 2,
 								cornerRadius: 4,

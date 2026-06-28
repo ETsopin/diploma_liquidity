@@ -1,5 +1,6 @@
 'use client'
 import { ReactNode, useContext } from 'react';
+import { useRouter } from 'next/navigation';
 
 import {
 	Stack,
@@ -55,10 +56,8 @@ const LEFT_SIDEBAR_ITEMS: Omit<NavIconButtonProps, 'key'>[] = [
 	{icon: HomeIcon, label: "Главная", href: "/"},
 	{icon: AssigmentIcon, label: "Отчеты", href: "/reports"},
 	{icon: LaunchIcon, label: "Расчетное ядро", href: "/core"},
-	{icon: EventIcon, label: "Планировщик", href: "/scheduler"},
 	{icon: BarChartIcon, label: "Дэшборды", href: "/dashboards"},
-	{icon: AdminPanelSettingsIcon, label: "Пользователи", href: "/users"},
-	{icon: ListAltIcon, label: "Журнал", href: "/logs"},
+	{icon: AdminPanelSettingsIcon, label: "Админ-панель", href: "/admin"},
 ];
 
 export function LeftSidebar() {
@@ -88,7 +87,20 @@ export function LeftSidebar() {
 
 export function RightSidebar(){
 	const { toggleColorMode, mode } = useContext(ColorModeContext);
+	const router = useRouter();
 	const theme = useTheme();
+
+	const handleLogout = async () => {
+
+		const response = await fetch('/api/auth/logout', {
+			method: 'POST',
+			credentials: 'include',
+		});
+
+		if (response.ok) {
+			router.push('/auth');
+		}
+	};
 
 	const getRightSidebarItems = (): Omit<NavIconButtonProps, 'key'>[] => [
 		{
@@ -97,7 +109,7 @@ export function RightSidebar(){
 			onClick: toggleColorMode,
 		},
 		{ icon: SettingsIcon, label: "Настройки", href: "/settings" },
-		{ icon: LogoutIcon, label: "Выход из аккаунта", onClick: () => { console.log("logout"); } },
+		{ icon: LogoutIcon, label: "Выход из аккаунта", onClick: () => { handleLogout() }},
     ];
 
 	const rightSidebarItems = getRightSidebarItems();

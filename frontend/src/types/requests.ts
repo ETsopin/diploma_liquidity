@@ -15,3 +15,29 @@ export interface ReportGenerateRequest {
 	report_type: ReportType;
 	report_format: ReportFormat;
 }
+
+export interface CreateUserRequest {
+	email: string;
+	password: string;
+	first_name: string;
+	middle_name?: string;
+	last_name: string;
+	role: 'viewer' | 'analyst' | 'admin';
+}
+
+export interface UpdateUserRequest {
+	first_name?: string;
+	middle_name?: string;
+	last_name?: string;
+	role?: 'viewer' | 'analyst' | 'admin';
+	is_active?: boolean;
+}
+
+export interface CreateLogRequest {
+	action: string;
+	entity?: string;
+	entity_id?: string;
+	status?: 'success' | 'error' | 'pending';
+	details?: Record<string, any>;
+	error?: string;
+}

@@ -93,7 +93,7 @@ export default function TimebucketsDataGrid() {
 					pageSizeOptions={[5, 10, 25]}
 					disableRowSelectionOnClick
 					sx={{
-						bgcolor: 'surface'
+						bgcolor: 'surface',
 					}}
 				/>
 			</Paper>

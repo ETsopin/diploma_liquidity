@@ -11,6 +11,9 @@ import GapBarChart from '@/components/Charts/GapBarChart';
 import ETLBatchDetails from '@/components/Details/ETLBatchDetails';
 import CalculationDetails from '@/components/Details/CalculationDetails';
 import ReportDetails from '@/components/Details/ReportDetails';
+import ReportsList from '@/components/Lists/ReportsList';
+
+import { useAuth } from '@/context/AuthContext';
 
 import ArticleIcon from '@mui/icons-material/Article';
 
@@ -20,9 +23,16 @@ import {
 } from '@mui/material';
 
 export default function Home() {
-	const [userName, setUserName] = useState<string | null>(null);
-	const [userRole, setUserRole] = useState<string | null>('Администратор');
+	const { user } = useAuth();
 
+	const fullName = [user?.last_name, user?.first_name, user?.middle_name]
+		.filter(Boolean).join(' ');
+
+	const roleLabels: Record<string, string> = {
+		admin: 'Администратор',
+		analyst: 'Аналитик',
+		viewer: 'Наблюдатель',
+	};
 
 	return(
 			<ContentStack>
@@ -30,11 +40,10 @@ export default function Home() {
 					direction="row"
 					sx={{
 						justifyContent: 'space-between',
-						py: 2,
 					}}
 				>
-					<Typography variant="h2">{`Добро пожаловать, ${userName}!`}</Typography>
-					<Typography variant="h5" color='text.secondary'>{`${userRole}`}</Typography>
+					<Typography variant="h2">{`Добро пожаловать, ${fullName || 'Пользователь'}!`}</Typography>
+					<Typography variant="h5" color='text.secondary'>{user ? roleLabels[user.role] || user.role : '' }</Typography>
 				</Stack>
 				<HealthCheck />
 				<Stack
@@ -59,8 +68,31 @@ export default function Home() {
 					<ReportDetails />
 				</Stack>
 				<Stack
-					direction="row"
+					direction="column"
 					spacing={2}
+					sx={{
+						width: '100%',
+					}}
+				>
+					<Stack
+						direction="row"
+						spacing={1}
+					>
+						<ArticleIcon />
+						<Typography
+							variant="h5"
+						>
+							Отчеты
+						</Typography>
+					</Stack>
+					<ReportsList />
+				</Stack>
+				<Stack
+					direction="column"
+					spacing={2}
+					sx={{
+						width: '100%',
+					}}
 				>
 					<TimebucketsDataGrid />
 					<CounterpartiesDataGrid />

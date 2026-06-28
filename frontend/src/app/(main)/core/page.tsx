@@ -29,7 +29,6 @@ export default function Core() {
 				direction="row"
 				sx={{
 					justifyContent: 'space-between',
-					py: 2,
 				}}
 			>
 				<Typography variant="h2">Расчетное ядро</Typography>

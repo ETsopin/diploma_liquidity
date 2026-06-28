@@ -113,7 +113,8 @@ export default function CounterpartiesDataGrid() {
 						},
 					}}
 					sx={{
-						bgcolor: 'surface'
+						bgcolor: 'surface',
+						width: '100%',
 					}}
 				/>
 			</Paper>

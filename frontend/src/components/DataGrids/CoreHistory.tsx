@@ -115,6 +115,7 @@ export default function CoreHistoryDataGrid() {
 				<IconButton
 					fontSize="small"
 					onClick={fetchData}
+					color="tertiary"
 				>
 					<LoopIcon/>
 				</IconButton>

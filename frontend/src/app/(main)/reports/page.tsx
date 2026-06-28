@@ -16,7 +16,6 @@ export default function Reports() {
 				direction="row"
 				sx={{
 					justifyContent: 'space-between',
-					py: 2,
 				}}
 			>
 				<Typography variant="h2">{'Отчетность'}</Typography>

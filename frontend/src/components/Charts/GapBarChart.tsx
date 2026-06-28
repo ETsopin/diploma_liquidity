@@ -18,7 +18,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
 import { getGapAnalysis } from '@/services/api';
-import { getLatestCalculationDate } from '@/services/latest';
+import { getLatestReportDate } from '@/services/latest';
 import { formatISODate } from '@/utils/dateUtils';
 import { GapAnalysisResponse } from '@/types';
 
@@ -45,7 +45,7 @@ export default function GapBarChart() {
 	};
 
 	const loadLatestDate = async () => {
-		const latestDate = await getLatestCalculationDate('gap');
+		const latestDate = await getLatestReportDate('gap');
 		if (latestDate) setReportDate(latestDate);
 	}
 	
@@ -96,7 +96,7 @@ export default function GapBarChart() {
 					p: 3,
 					width: '100%',
 					height: '100%',
-					// bgcolor: 'surface.light'
+					bgcolor: 'secondary'
 				}}
 			>
 
@@ -108,6 +108,8 @@ export default function GapBarChart() {
 							p: 1
 						}}
 						alignItems="center"
+						textAlign="center"
+						justifyContent="center"
 					>
 						<Typography variant="body1">
 							<strong>Активы:</strong> {totalAssets.toFixed(2)} млрд ₽

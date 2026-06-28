@@ -1,0 +1,119 @@
+import clientPromise from './mongodb';
+import { ObjectId } from 'mongodb';
+import { User } from '@/types';
+
+export const findUserByEmail = async (email: string) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	return db.collection('users').findOne({ email });
+};
+
+export const findUserById = async (id: string) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	return db.collection('users').findOne({_id: new ObjectId(id)});
+};
+
+export const findAllUsers = async (
+	limit: number = 50,
+	offset: number = 0,
+): Promise<{ items: User[]; total: number }> => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	const collection = db.collection('users');
+
+	const [items, total] = await Promise.all([
+		collection.find({}).sort({ create_at: -1 }).skip(offset).limit(limit).toArray(),
+		collection.countDocuments({}),
+	]);
+
+	return { items, total };
+};
+
+export const createUser = async (userData: {
+	email: string;
+	password_hash: string;
+	first_name: string;
+	middle_name?: string;
+	last_name: string;
+	role?: 'admin' | 'analyst' | 'viewer';
+}) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+
+	const newUser = {
+		...userData,
+		middle_name: userData.middle_name || '',
+		role: userData.role || 'viewer',
+		is_active: true,
+		created_at: new Date(),
+		last_login: null,
+		refresh_token: null,
+		settings: {
+			theme: 'light',
+		},
+		audit: {
+			created_by: 'system',
+			updated_at: new Date(),
+			updated_by: 'system',
+		},
+		sessions: [],
+	};
+
+	const result = await db.collection('users').insertOne(newUser);
+	return { ...newUser, _id: result.insertedId };
+};
+
+export const updateUserById = async (
+	id: string,
+	data: {
+		first_name?: string;
+		middle_name?: string;
+		last_name?: string;
+		role?: 'admin' | 'analyst' | 'viewer';
+		is_active?: boolean;
+		password_hash?: string;
+	}
+) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+
+	const updateFields: Record<string, any> = {
+		...data,
+		'audit.updated_at': new Date(),
+		'audit.updated_by': 'admin',
+	};
+
+	return db.collection('users').findOneAndUpdate(
+		{ _id: new ObjectId(id) },
+		{ $set: updateFields },
+		{ returnDocument: 'after'}
+	);
+};
+
+export const changeUserActivity = async (id: string, activity: boolean, ) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	return db.collection('users').updateOne(
+		{ _id: new ObjectId(id) },
+		{ $set: { is_active: activity, 'audit.updated_at': new Date(), 'audit.updated_by': 'admin' } }
+	);
+};
+
+export const updateRefreshToken = async (email: string, refreshToken: string | null) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	return db.collection('users').updateOne(
+		{ email },
+		{ $set: { refresh_token: refreshToken } }
+	);
+};
+
+export const updateLastLogin = async (email: string) => {
+	const client = await clientPromise;
+	const db = client.db('liquidity');
+	return db.collection('users').updateOne(
+		{ email },
+		{ $set: { last_login: new Date() } }
+	);
+};
