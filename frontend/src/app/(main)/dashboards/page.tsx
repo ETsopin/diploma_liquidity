@@ -29,12 +29,28 @@ export default function Admin() {
 				<Typography variant="h2">Визуализация</Typography>
 			</Stack>
 			<KpiRow />
-			<GapTrendLine />
-			<ConcentrationTrendLine />
+			<Stack
+				direction="row"
+				sx={{
+					width: '100%',
+				}}
+				spacing={2}
+			>
+				<GapBarWidget />
+				<ConcentrationPieWidget />
+			</Stack>
+			<Stack
+				direction="row"
+				sx={{
+					width: '100%',
+				}}
+				spacing={2}
+			>
+				<GapTrendLine />
+				<ConcentrationTrendLine />
+			</Stack>
 			<ComparisonBar />
 			<ReportTable />
-			<GapBarWidget />
-			<ConcentrationPieWidget />
 	    </ContentStack>
 	);
 };
