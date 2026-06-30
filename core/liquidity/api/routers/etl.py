@@ -72,9 +72,10 @@ async def list_batches(pg: Pagination = Depends()) -> dict:
     """Возвращает список пакетов загрузки из audit.rawdatabatch."""
     with dwh_session() as session:
         rows = session.execute(text("""
-            SELECT id, datasource_id, report_date, status,
+            SELECT id, datasource_id, status,
                    started_at, finished_at, error_message,
-                   total_records, loaded_records
+                   rows_extracted AS total_records,
+                   rows_loaded   AS loaded_records
             FROM audit.rawdatabatch
             ORDER BY started_at DESC
             LIMIT :lim OFFSET :off
