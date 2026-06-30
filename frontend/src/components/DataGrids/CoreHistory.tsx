@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { getETLBatches, getCalculations } from '@/services/api';
 import { formatISODate, formatISODateTime } from '@/utils/dateUtils';
 
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, ruRU } from '@mui/x-data-grid';
 import {
 	Paper,
 	Typography, 
@@ -20,57 +20,54 @@ import HistoryIcon from '@mui/icons-material/History';
 interface UnifiedOperation {
 	id: string;
 	date: string;
+	report_date: string;
 	operation: string;
 	status: string;
-	details: string;
-	source: 'etl' | 'calculations';
+	source: string;
 }
 
-export default function CoreHistoryDataGrid() {
-	const [rows, setRows ] = useState<UnifiedOperation[]>([]);
-	const [loading, setLoading] = useState(true);
+interface CoreHistoryProps {
+	refreshKey?: number;
+}
 
-	const [limit, setLimit] = useState(100);
-	const [offset, setOffsset] = useState(0);
+export default function CoreHistoryDataGrid({refreshKey}: CoreHistoryProps) {
+	const [rows, setRows] = useState<UnifiedOperation[]>([]);
+	const [loading, setLoading] = useState(true);
 
 	const fetchData = async () => {
 		setLoading(true);
 
 		try {
 			const [etlBatches, calculations] = await Promise.all([
-				getETLBatches(limit, offset),
-				getCalculations(limit, offset),
+				getETLBatches(100, 0),
+				getCalculations(100, 0),
 			]);
 
 			const unifiedRows: UnifiedOperation[] = [];
 
-			console.log(etlBatches);
-			console.log(calculations);
-
-			(etlBatches.items || []).forEach((batch) => {
+			(etlBatches.items || []).forEach((batch: any) => {
 				unifiedRows.push({
-					id: `etl-${batch.batch_id}`,
+					id: `etl-${batch.id}`,
 					date: formatISODateTime(batch.started_at),
-					report_date: formatISODate(batch.report_date),
-					operation: `ETL загрузка (${batch.source})`,
+					report_date: '—',
+					operation: 'ETL загрузка',
 					status: batch.status,
-					source: 'etl',
+					source: 'ETL',
 				});
 			});
 
-			(calculations.items || []).forEach((calc) => {
+			(calculations.items || []).forEach((calc: any) => {
 				unifiedRows.push({
 					id: `calc-${calc.id}`,
 					date: formatISODateTime(calc.started_at),
 					report_date: formatISODate(calc.report_date),
 					operation: `Расчет (${calc.calc_type})`,
 					status: calc.status,
-					source: 'calculation',
+					source: 'Расчет',
 				});
 			});
 			setRows(unifiedRows);
-			console.log(unifiedRows);
-		
+
 		} catch (err) {
 			console.error('CORE HISTORY FAILED:', err);
 		} finally {
@@ -80,36 +77,29 @@ export default function CoreHistoryDataGrid() {
 
 	useEffect(() => {
 		fetchData();
-	}, []);
+	}, [refreshKey]);
 
-	const columns : GridColDef[] = [
-		{field: 'id', headerName: 'ID', flex: 1}, 
-		{field: 'source', headerName: 'Источник', flex: 2}, 
-		{field: 'date', headerName: 'Дата выполнения', flex: 4}, 
-		{field: 'report_date', headerName: 'Дата отчета', flex: 4}, 
-		{field: 'operation', headerName: 'Тип операции', flex: 2}, 
-		{field: 'status', headerName: 'Статус', flex: 2}, 
+	const columns: GridColDef[] = [
+		{ field: 'source', headerName: 'Источник', flex: 2 },
+		{ field: 'date', headerName: 'Дата выполнения', flex: 4 },
+		{ field: 'report_date', headerName: 'Дата отчета', flex: 3 },
+		{ field: 'operation', headerName: 'Тип операции', flex: 3 },
+		{ field: 'status', headerName: 'Статус', flex: 2 },
 	];
 
 	return (
 		<Stack
 			direction="column"
 			spacing={3}
-			sx={{
-				width: '100%'
-			}}
+			sx={{ width: '100%' }}
 		>
 			<Stack
 				direction="row"
 				spacing={1}
 				alignItems="center"
 			>
-				<HistoryIcon
-			 		fontSize="large"	
-				/>
-				<Typography
-					variant="h4"
-				>
+				<HistoryIcon fontSize="large" />
+				<Typography variant="h4">
 					Журнал операций расчетного ядра
 				</Typography>
 				<IconButton
@@ -117,28 +107,31 @@ export default function CoreHistoryDataGrid() {
 					onClick={fetchData}
 					color="tertiary"
 				>
-					<LoopIcon/>
+					<LoopIcon />
 				</IconButton>
 			</Stack>
 			<Paper
 				variant="outlined"
-				sx={{
-					width: '100%',
-				}}
+				sx={{ width: '100%' }}
 			>
-				<DataGrid 
+				<DataGrid
 					rows={rows}
 					columns={columns}
 					loading={loading}
+					getRowId={(row) => row.id}
 					initialState={{
 						pagination: {
-							paginationModel: {page: 0, pageSize: 10},
+							paginationModel: { page: 0, pageSize: 10 },
+						},
+						sorting: {
+							sortModel: [{field: 'date', sort: 'desc'}],
 						},
 					}}
-					pageSizeOptions={[5, 10, 25]}
+					pageSizeOptions={[10, 25, 50]}
 					disableRowSelectionOnClick
+					localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
 				/>
 			</Paper>
 		</Stack>
-	)
+	);
 }

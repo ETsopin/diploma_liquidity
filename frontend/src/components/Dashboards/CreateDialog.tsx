@@ -53,7 +53,7 @@ export default function CreateDialog({ open, onClose, onCreate }: CreateDialogPr
 					/>
 
 					<Typography variant="subtitle2">Шаблон</Typography>
-					<Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+					<Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
 						{TEMPLATES.map((t) => (
 							<Card
 								key={t.slug}

@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import { useAuth } from '@/context/AuthContext';
+
 import {
 	Container,
 	Typography,
@@ -18,12 +21,14 @@ import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LockIcon from '@mui/icons-material/Lock';
 
+
 export default function Auth() {
 	const router = useRouter();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const { refreshUser } = useAuth(); 
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -49,6 +54,8 @@ export default function Auth() {
 			localStorage.setItem('refreshToken', data.refreshToken);
 			console.log(data.accessToken);
 			console.log(data.refreshToken);
+
+			refreshUser();
 
 			router.push('/');
 		} catch (err) {

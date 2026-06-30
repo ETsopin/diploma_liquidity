@@ -21,11 +21,14 @@ import {
 
 import FunctionsIcon from '@mui/icons-material/Functions';
 
-
 const initialState: CalculateRequest = {
 	calc_type: 'full',
 	report_date: formatDate(new Date()),
 };
+
+interface CalculateFormProps {
+	onSuccess?: () => void;
+}
 
 const ETL_SOURCE_OPTIONS = [
 	{ value: 'all' as const, label: 'Все (PostgreSQL + Excel)' },
@@ -33,7 +36,7 @@ const ETL_SOURCE_OPTIONS = [
 	{ value: 'excel' as const, label: 'PDF (.pdf)' },
 ];
 
-export default function CalculateForm() {
+export default function CalculateForm({onSuccess}: CalculateFormProps) {
 	const [formData, setFormData] = useState<CalculateRequest>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -102,6 +105,7 @@ export default function CalculateForm() {
 				}),
 			}).catch(() => {});
 
+			onSuccess?.();
 			// console.log('API Response:', data);
 			// setTimeout(() => setSuccess(null), 5000);
 		

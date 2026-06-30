@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
 interface UserInfo {
 	id: string;
@@ -14,6 +14,7 @@ interface UserInfo {
 interface AuthContextType {
 	user: UserInfo | null;
 	loading: boolean;
+	refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({user: null, loading: true});
@@ -21,20 +22,26 @@ const AuthContext = createContext<AuthContextType>({user: null, loading: true});
 export function AuthProvider({children}: ReactNode) {
 	const [user, setUser] = useState<UserInfo | null>(null);
 	const [loading, setLoading] = useState(true);
-	
-	useEffect(() => {
-		fetch('/api/auth/validate', { credentials: 'include' })
-		.then(res => res.json())
-		.then(data => {
-			if (data.valid) setUser(data.user);
-			else setUser(null);
-		})
-		.catch(() => setUser(null))
-		.finally(() => setLoading(false));
+
+	const refreshUser = useCallback(async () => {
+	  setLoading(true);
+	  try {
+		const res = await fetch('/api/auth/validate', { credentials: 'include' });
+		const data = await res.json();
+		if (data.valid) setUser(data.user);
+		else setUser(null);
+	  } catch {
+		setUser(null);
+	  } finally {
+		setLoading(false);
+	  }
 	}, []);
 
+	
+	useEffect(() => { refreshUser(); }, [refreshUser]);
+
 	return (
-		<AuthContext.Provider value = {{user, loading}}>
+		<AuthContext.Provider value = {{user, loading, refreshUser}}>
 			{children}
 		</AuthContext.Provider>
 	);

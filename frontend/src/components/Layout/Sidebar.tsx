@@ -24,6 +24,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 
+import { useAuth } from '@/context/AuthContext';
+
 
 interface SidebarProps {
 	children: ReactNode;
@@ -61,9 +63,17 @@ const LEFT_SIDEBAR_ITEMS: Omit<NavIconButtonProps, 'key'>[] = [
 ];
 
 export function LeftSidebar() {
+	const { user } = useAuth();
+
+	const visibleItems = LEFT_SIDEBAR_ITEMS.filter((item) => {
+		if (item.href === '/core' && user?.role === 'viewer') return false;
+		if (item.href === '/admin' && user?.role !== 'admin') return false;
+		return true;
+	});
+
 	return (
 		<Sidebar>
-			{LEFT_SIDEBAR_ITEMS.map((item, index) => (
+			{visibleItems.map((item, index) => (
 				<Box
 					key={index}
 					sx={{
@@ -86,6 +96,7 @@ export function LeftSidebar() {
 }
 
 export function RightSidebar(){
+	const { refreshUser } = useAuth();
 	const { toggleColorMode, mode } = useContext(ColorModeContext);
 	const router = useRouter();
 	const theme = useTheme();
@@ -98,6 +109,7 @@ export function RightSidebar(){
 		});
 
 		if (response.ok) {
+			refreshUser();
 			router.push('/auth');
 		}
 	};
@@ -108,7 +120,6 @@ export function RightSidebar(){
 			label: mode === 'dark' ? 'Светлая тема' : 'Темная тема',
 			onClick: toggleColorMode,
 		},
-		{ icon: SettingsIcon, label: "Настройки", href: "/settings" },
 		{ icon: LogoutIcon, label: "Выход из аккаунта", onClick: () => { handleLogout() }},
     ];
 

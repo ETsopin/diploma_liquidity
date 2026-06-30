@@ -15,10 +15,9 @@ import ErrorIcon from '@mui/icons-material/Error';
 import PendingIcon from '@mui/icons-material/Pending';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import { getETLBatchDetails } from '@/services/api';
-import { ETLBatchDetails } from '@/types/schemas';
+import { getLatestBatchId } from '@/services/latest';
+import { ETLBatchDetails as ETLBatchDetailsType } from '@/types/schemas';
 import { formatISODateTime } from '@/utils/dateUtils';
-
-const BATCH_ID = 88; // TODO: Dynamic ID
 
 const getStatusChip = (status: string) => {
   switch (status) {
@@ -34,20 +33,27 @@ const getStatusChip = (status: string) => {
 };
 
 export default function ETLBatchDetails() {
-  const [data, setData] = useState<ETLBatchDetails | null>(null);
+  const [data, setData] = useState<ETLBatchDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [batchId, setBatchId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await getETLBatchDetails(BATCH_ID);
-        if (response) {
-          setData(response);
+        const latestId = await getLatestBatchId();
+        if (latestId) {
+          setBatchId(latestId);
+          const response = await getETLBatchDetails(latestId);
+          if (response) {
+            setData(response);
+          } else {
+            setError('Не удалось загрузить детали ETL-загрузки');
+          }
         } else {
-          setError('Не удалось загрузить детали ETL-загрузки');
+          setError('ETL-загрузки не найдены');
         }
       } catch (err) {
         setError('Ошибка при загрузке данных');
@@ -63,12 +69,12 @@ export default function ETLBatchDetails() {
   return (
     <Paper variant="outlined" sx={{ p: 3, width: '100%' }}>
       <Stack spacing={2}>
-      <Stack direction="row" alignItems="center" spacing={1}>
-	  		<CompareArrowsIcon />
-			<Typography variant="h6" fontWeight={600}>
-			  Детали ETL-загрузки #{BATCH_ID}
-			</Typography>
-      </Stack>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <CompareArrowsIcon />
+          <Typography variant="h6" fontWeight={600}>
+            Детали ETL-загрузки #{batchId || '—'}
+          </Typography>
+        </Stack>
 
         <Divider />
 
