@@ -55,27 +55,23 @@ overflow: 'auto',
 						borderBottom: 1,
 						borderColor: 'divider',
 						bgcolor: 'action.hover',
-						cursor: 'grab',
+						position: 'relative',
+						zIndex: 10,
 					}}
-					className="drag-handle"
 				>
-					<Stack direction="row" alignItems="center" spacing={0.5}>
+					<Stack
+						direction="row"
+						alignItems="center"
+						spacing={0.5}
+						className="drag-handle"
+						sx={{ cursor: 'grab', flex: 1 }}
+					>
 						<DragIndicatorIcon fontSize="small" color="disabled" />
 						<Typography variant="subtitle2" noWrap sx={{ maxWidth: 200 }}>
 							{widget.title}
 						</Typography>
 					</Stack>
 					<Stack direction="row">
-						{onConfig && (
-							<Tooltip title="Настроить">
-								<IconButton
-									size="small"
-									onClick={() => onConfig(widget.id)}
-								>
-									<SettingsIcon fontSize="small" />
-								</IconButton>
-							</Tooltip>
-						)}
 						{onRemove && (
 							<Tooltip title="Удалить">
 								<IconButton
@@ -90,7 +86,7 @@ overflow: 'auto',
 				</Stack>
 			)}
 
-			<Stack sx={{ flex: 1, overflow: 'hidden', p: 1 }}>
+			<Stack sx={{ flex: 1, overflow: 'auto', p: 1 }}>
 				{children}
 			</Stack>
 		</Paper>

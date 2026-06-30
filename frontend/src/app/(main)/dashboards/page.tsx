@@ -49,6 +49,10 @@ export default function DashboardsPage() {
 			  active.sharing.shared_with.includes(user.id)))
 		: false;
 
+	const canDelete = active && user
+		? user.role === 'admin' || active.owner_id === user.id
+		: false;
+
 	const loadDashboards = useCallback(async () => {
 		try {
 			const res = await fetch('/api/dashboards');
@@ -74,11 +78,12 @@ export default function DashboardsPage() {
 			if (saveTimer) clearTimeout(saveTimer);
 			saveTimer = setTimeout(async () => {
 				try {
-					await fetch(`/api/dashboards/${activeId}`, {
+					const res = await fetch(`/api/dashboards/${activeId}`, {
 						method: 'PUT',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({ widgets }),
 					});
+					if (!res.ok) console.error('Auto-save failed', await res.text());
 				} catch (e) {
 					console.error('Auto-save failed', e);
 				}
@@ -105,11 +110,14 @@ export default function DashboardsPage() {
 		const def = WIDGET_REGISTRY[type];
 		if (!def) return;
 
+		const maxY = active.widgets.reduce(
+			(max, w) => Math.max(max, w.layout.y + w.layout.h), 0
+		);
 		const newWidget: DashboardWidget = {
 			id: crypto.randomUUID(),
 			type: type as any,
 			title: def.label,
-			layout: { x: 0, y: Infinity, w: def.defaultSize.w, h: def.defaultSize.h },
+			layout: { x: 0, y: maxY, w: def.defaultSize.w, h: def.defaultSize.h },
 			config: { ...def.defaultConfig },
 		};
 
@@ -210,6 +218,20 @@ export default function DashboardsPage() {
 		setShareOpen(false);
 	};
 
+	const handleDelete = async () => {
+		if (!activeId || !active) return;
+		try {
+			const res = await fetch(`/api/dashboards/${activeId}`, { method: 'DELETE' });
+			if (res.ok) {
+				const updated = dashboards.filter((d) => d._id !== activeId);
+				setDashboards(updated);
+				setActiveId(updated.length > 0 ? updated[0]._id : null);
+			}
+		} catch (e) {
+			console.error('Delete failed', e);
+		}
+	};
+
 	const mergedWidgets = (active?.widgets || []).map((w) => ({
 		...w,
 		config: sessionConfigs[w.id]
@@ -232,7 +254,7 @@ export default function DashboardsPage() {
 			<Stack
 				direction="row"
 				alignItems="center"
-				justifyContent="space-between"
+				spacing={1}
 			>
 				<DashboardSelector
 					dashboards={dashboards}
@@ -241,6 +263,8 @@ export default function DashboardsPage() {
 					onCreate={() => setCreateOpen(true)}
 					onExport={handleExport}
 					onImport={handleImport}
+					onDelete={handleDelete}
+					canDelete={canDelete}
 				/>
 				{active && !active.is_template && (
 					<Tooltip title="Поделиться">

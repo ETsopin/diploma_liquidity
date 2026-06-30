@@ -1,9 +1,14 @@
-import GridLayout from 'react-grid-layout';
+import GridLayout, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
+
+import { useRef } from 'react';
+import { useTheme } from '@mui/material/styles';
 
 import WidgetWrapper from './WidgetWrapper';
 import { WIDGET_REGISTRY } from './widgets/registry';
 import { DashboardWidget } from '@/types/dashboards';
+
+const ResponsiveGridLayout = WidthProvider(GridLayout);
 
 interface DashboardGridProps {
 	widgets: DashboardWidget[];
@@ -20,58 +25,76 @@ export default function DashboardGrid({
 	onRemove,
 	onConfig,
 }: DashboardGridProps) {
-	const layout = widgets.map((w) => ({
-		i: w.id,
-		x: w.layout.x,
-		y: w.layout.y,
-		w: w.layout.w,
-		h: w.layout.h,
-	}));
+	const mounted = useRef(false);
+	const theme = useTheme();
+
+	const layout = widgets.map((w) => {
+		const def = WIDGET_REGISTRY[w.type];
+		return {
+			i: w.id,
+			x: w.layout.x,
+			y: w.layout.y,
+			w: w.layout.w,
+			h: w.layout.h,
+			minW: def?.minSize?.w,
+			minH: def?.minSize?.h,
+		};
+	});
 
 	const handleLayoutChange = (newLayout: any[]) => {
+		if (!mounted.current) {
+			mounted.current = true;
+			return;
+		}
 		const updated = widgets.map((w) => {
 			const item = newLayout.find((l: any) => l.i === w.id);
 			return item
-				? {
-						...w,
-						layout: { x: item.x, y: item.y, w: item.w, h: item.h },
-				  }
+				? { ...w, layout: { x: item.x, y: item.y, w: item.w, h: item.h } }
 				: w;
 		});
 		onLayoutChange(updated);
 	};
 
 	return (
-		<GridLayout
-			className="layout"
-			layout={layout}
-			cols={12}
-			rowHeight={100}
-			onLayoutChange={handleLayoutChange}
-			isDraggable={mode === 'edit'}
-			isResizable={mode === 'edit'}
-			compactType="vertical"
-			draggableHandle=".drag-handle"
-		>
-			{widgets.map((w) => {
-				const def = WIDGET_REGISTRY[w.type];
-				if (!def) return null;
+		<>
+			<style>{`
+				.react-grid-placeholder {
+					background: ${theme.palette.tertiary.main} !important;
+					opacity: 0.3;
+				}
+			`}</style>
+			<ResponsiveGridLayout
+				className="layout"
+				layout={layout}
+				cols={12}
+				rowHeight={100}
+				onLayoutChange={handleLayoutChange}
+				isDraggable={mode === 'edit'}
+				isResizable={mode === 'edit'}
+				compactType={null}
+				preventCollision
+				draggableHandle=".drag-handle"
+			>
+				{widgets.map((w) => {
+					const def = WIDGET_REGISTRY[w.type];
+					if (!def) return null;
 
-				const WidgetComponent = def.component;
+					const WidgetComponent = def.component;
 
-				return (
-					<div key={w.id}>
-						<WidgetWrapper
-							widget={w}
-							mode={mode}
-							onRemove={mode === 'edit' ? onRemove : undefined}
-							onConfig={mode === 'edit' ? onConfig : undefined}
-						>
-							<WidgetComponent {...w.config} />
-						</WidgetWrapper>
-					</div>
-				);
-			})}
-		</GridLayout>
+					return (
+						<div key={w.id}>
+							<WidgetWrapper
+								widget={w}
+								mode={mode}
+								onRemove={mode === 'edit' ? onRemove : undefined}
+								onConfig={mode === 'edit' ? onConfig : undefined}
+							>
+								<WidgetComponent {...w.config} />
+							</WidgetWrapper>
+						</div>
+					);
+				})}
+			</ResponsiveGridLayout>
+		</>
 	);
 }

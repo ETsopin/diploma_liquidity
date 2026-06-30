@@ -115,7 +115,7 @@ export default function KpiRow() {
 		: [];
 
 	return (
-		<Stack spacing={1} sx={{ width: '100%' }}>
+		<Stack spacing={1} sx={{ width: '100%', height: '100%' }}>
 			<Stack direction="row" alignItems="center" spacing={2}>
 				<Stack direction="row" alignItems="center" spacing={1}>
 					<AnalyticsIcon />
@@ -134,7 +134,7 @@ export default function KpiRow() {
 					</Select>
 				</FormControl>
 			</Stack>
-			<Stack direction="row" spacing={2}>
+			<Stack direction="row" spacing={2} sx={{height: '100%'}}>
 				{metrics.map((m) => (
 					<Paper
 						key={m.label}

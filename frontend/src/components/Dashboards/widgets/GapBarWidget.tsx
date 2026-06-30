@@ -129,7 +129,7 @@ export default function GapBarWidget() {
 			)}
 
 			{!loading && hasBuckets && (
-				<Paper variant="outlined" sx={{ p: 3, width: '100%' }}>
+				<Paper variant="outlined" sx={{ p: 3, width: '100%', height: '100%' }}>
 					<Stack direction="column" spacing={3}>
 						<Stack
 							direction="row"
