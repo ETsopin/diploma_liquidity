@@ -55,13 +55,17 @@ overflow: 'auto',
 						borderBottom: 1,
 						borderColor: 'divider',
 						bgcolor: 'action.hover',
-						cursor: 'grab',
-						zIndex: 10,
 						position: 'relative',
+						zIndex: 10,
 					}}
-					className="drag-handle"
 				>
-					<Stack direction="row" alignItems="center" spacing={0.5}>
+					<Stack
+						direction="row"
+						alignItems="center"
+						spacing={0.5}
+						className="drag-handle"
+						sx={{ cursor: 'grab', flex: 1 }}
+					>
 						<DragIndicatorIcon fontSize="small" color="disabled" />
 						<Typography variant="subtitle2" noWrap sx={{ maxWidth: 200 }}>
 							{widget.title}

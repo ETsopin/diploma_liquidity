@@ -11,6 +11,7 @@ import {
 	Tooltip,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Dashboard } from '@/types/dashboards';
@@ -22,6 +23,8 @@ interface DashboardSelectorProps {
 	onCreate: () => void;
 	onExport: () => void;
 	onImport: (file: File) => void;
+	onDelete: () => void;
+	canDelete?: boolean;
 }
 
 export default function DashboardSelector({
@@ -31,6 +34,8 @@ export default function DashboardSelector({
 	onCreate,
 	onExport,
 	onImport,
+	onDelete,
+	canDelete,
 }: DashboardSelectorProps) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -50,7 +55,7 @@ export default function DashboardSelector({
 				>
 					{dashboards.map((d) => (
 						<MenuItem key={d._id} value={d._id}>
-							{d.title} {d.is_template ? '📋' : ''}
+							{d.title}
 						</MenuItem>
 					))}
 				</Select>
@@ -62,17 +67,13 @@ export default function DashboardSelector({
 				</IconButton>
 			</Tooltip>
 
-			<Tooltip title="Экспорт конфига">
-				<IconButton onClick={onExport}>
-					<FileDownloadIcon />
-				</IconButton>
-			</Tooltip>
-
-			<Tooltip title="Импорт конфига">
-				<IconButton onClick={() => inputRef.current?.click()}>
-					<FileUploadIcon />
-				</IconButton>
-			</Tooltip>
+			{canDelete && activeId && (
+				<Tooltip title="Удалить дашборд">
+					<IconButton color="error" onClick={onDelete}>
+						<DeleteIcon />
+					</IconButton>
+				</Tooltip>
+			)}
 
 			<input
 				ref={inputRef}

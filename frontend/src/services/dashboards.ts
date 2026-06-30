@@ -107,6 +107,12 @@ export const createDashboard = async (
 			widgets = template.widgets.map((w: any) => ({
 				...w,
 				id: crypto.randomUUID(),
+				layout: {
+					x: new Int32(w.layout.x),
+					y: new Int32(w.layout.y),
+					w: new Int32(w.layout.w),
+					h: new Int32(w.layout.h),
+				},
 			}));
 		}
 	}

@@ -49,6 +49,10 @@ export default function DashboardsPage() {
 			  active.sharing.shared_with.includes(user.id)))
 		: false;
 
+	const canDelete = active && user
+		? user.role === 'admin' || active.owner_id === user.id
+		: false;
+
 	const loadDashboards = useCallback(async () => {
 		try {
 			const res = await fetch('/api/dashboards');
@@ -214,6 +218,20 @@ export default function DashboardsPage() {
 		setShareOpen(false);
 	};
 
+	const handleDelete = async () => {
+		if (!activeId || !active) return;
+		try {
+			const res = await fetch(`/api/dashboards/${activeId}`, { method: 'DELETE' });
+			if (res.ok) {
+				const updated = dashboards.filter((d) => d._id !== activeId);
+				setDashboards(updated);
+				setActiveId(updated.length > 0 ? updated[0]._id : null);
+			}
+		} catch (e) {
+			console.error('Delete failed', e);
+		}
+	};
+
 	const mergedWidgets = (active?.widgets || []).map((w) => ({
 		...w,
 		config: sessionConfigs[w.id]
@@ -236,7 +254,7 @@ export default function DashboardsPage() {
 			<Stack
 				direction="row"
 				alignItems="center"
-				justifyContent="space-between"
+				spacing={1}
 			>
 				<DashboardSelector
 					dashboards={dashboards}
@@ -245,6 +263,8 @@ export default function DashboardsPage() {
 					onCreate={() => setCreateOpen(true)}
 					onExport={handleExport}
 					onImport={handleImport}
+					onDelete={handleDelete}
+					canDelete={canDelete}
 				/>
 				{active && !active.is_template && (
 					<Tooltip title="Поделиться">
