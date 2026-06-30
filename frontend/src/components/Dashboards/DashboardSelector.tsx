@@ -69,7 +69,7 @@ export default function DashboardSelector({
 
 			{canDelete && activeId && (
 				<Tooltip title="Удалить дашборд">
-					<IconButton color="error" onClick={onDelete}>
+					<IconButton onClick={onDelete}>
 						<DeleteIcon />
 					</IconButton>
 				</Tooltip>

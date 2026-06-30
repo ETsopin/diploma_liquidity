@@ -73,7 +73,7 @@ export default function Header() {
 						width: 72,
 					}}
 				>
-					<IconButton onClick={()=> {router.push('/account')}}>
+					<IconButton onClick={()=> {router.push('/')}}>
 						<Avatar></Avatar>	
 					</IconButton>
 				</Container>

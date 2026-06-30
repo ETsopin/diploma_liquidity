@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { getTimebuckets } from '@/services/api';
 import { TimebucketInfo } from '@/types/schemas';
 
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, ruRU } from '@mui/x-data-grid';
 import {
 	Typography,
 	Stack,
@@ -92,6 +92,7 @@ export default function TimebucketsDataGrid() {
 					}}
 					pageSizeOptions={[5, 10, 25]}
 					disableRowSelectionOnClick
+					localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
 					sx={{
 						bgcolor: 'surface',
 					}}

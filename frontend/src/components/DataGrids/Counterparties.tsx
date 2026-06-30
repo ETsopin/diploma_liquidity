@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { getCounterparties } from '@/services/api';
 import { CounterpartyInfo } from '@/types';
 
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, ruRU } from '@mui/x-data-grid';
 import {
 	Typography,
 	Stack,
@@ -107,6 +107,7 @@ export default function CounterpartiesDataGrid() {
 					loading={loading}
 					pageSizeOptions={[5, 10, 25]}
 					disableRowSelectionOnClick
+					localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
 					initialState={{
 						sorting: {
 							sortModel: [{field: 'id', sort: 'asc'}],

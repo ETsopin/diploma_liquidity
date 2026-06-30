@@ -103,9 +103,6 @@ export default function SystemTimelineChart() {
 									</ToggleButton>
 								))}
 							</ToggleButtonGroup>
-							<Typography variant="h6">
-								<strong>Всего:</strong> {total}
-							</Typography>
 						</Stack>
 						<LineChart
 							xAxis={[

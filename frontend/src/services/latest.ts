@@ -1,4 +1,4 @@
-import { getCalculations, getReports } from './api';
+import { getCalculations, getReports, getETLBatches } from './api';
 import { CalculationRecord, CalcType } from '@/types';
 
 export const getLatestCalculationDate = async (
@@ -73,4 +73,15 @@ export const getLatestReportId = async (): Promise<string | null> => {
 	} catch (err) {
 		console.error(`getLatestReportID Failed:`, err);
 	}
+};
+
+export const getLatestBatchId = async (): Promise<number | null> => {
+    try {
+        const response = await getETLBatches(1, 0);
+        if (!response || !response.items || response.items.length === 0) return null;
+        return response.items[0].id;
+    } catch (err) {
+        console.error('getLatestBatchId failed:', err);
+        return null;
+    }
 };

@@ -18,6 +18,9 @@ import {
 
 export default function Core() {
 	const [activeTab, setActiveTab] = useState(0);
+	const [refreshKey, setRefreshKey] = useState(0);
+
+	const onOperationSuccess = () => setRefreshKey(k => k + 1);
 
 	const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
 		setActiveTab(newValue);
@@ -42,15 +45,15 @@ export default function Core() {
 			</Tabs>
 
 			{ activeTab === 0 && (
-				<ETLForm />
+				<ETLForm onSuccess={onOperationSuccess} />
 			)}
 
 			{ activeTab === 1 && (
 				<Stack>
-					<CalculateForm />
+					<CalculateForm onSuccess={onOperationSuccess} />
 				</Stack>
 			)}
-			<CoreHistoryDataGrid />
+			<CoreHistoryDataGrid refreshKey={refreshKey} />
 
 	    </ContentStack>
 	);

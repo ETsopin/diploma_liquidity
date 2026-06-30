@@ -33,7 +33,11 @@ const ETL_SOURCE_OPTIONS = [
 	{ value: 'excel' as const, label: 'PDF (.pdf)' },
 ];
 
-export default function ETLForm() {
+interface ETLFormProps {
+	onSuccess?: () => void;
+}
+
+export default function ETLForm({onSuccess}: ETLFormProps) {
 	const [formData, setFormData] = useState<ETLRunRequest>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -102,6 +106,7 @@ export default function ETLForm() {
 				}),
 			}).catch(() => {});
 
+			onSuccess?.();
 			// console.log('API Response:', data);
 			// setTimeout(() => setSuccess(false), 5000);
 		
