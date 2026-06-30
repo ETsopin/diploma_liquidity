@@ -26,15 +26,18 @@ export default function DashboardGrid({
 }: DashboardGridProps) {
 	const mounted = useRef(false);
 
-	const layout = widgets.map((w) => ({
-		i: w.id,
-		x: w.layout.x,
-		y: w.layout.y,
-		w: w.layout.w,
-		h: w.layout.h,
-	}));
-
-	console.log('[DashboardGrid] layout:', JSON.stringify(layout));
+	const layout = widgets.map((w) => {
+		const def = WIDGET_REGISTRY[w.type];
+		return {
+			i: w.id,
+			x: w.layout.x,
+			y: w.layout.y,
+			w: w.layout.w,
+			h: w.layout.h,
+			minW: def?.minSize?.w,
+			minH: def?.minSize?.h,
+		};
+	});
 
 	const handleLayoutChange = (newLayout: any[]) => {
 		if (!mounted.current) {
