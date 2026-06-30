@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+
 import {
 	Stack,
 	Select,
@@ -10,10 +11,14 @@ import {
 	IconButton,
 	Tooltip,
 } from '@mui/material';
+
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import ImageIcon from '@mui/icons-material/Image';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+
 import { Dashboard } from '@/types/dashboards';
 
 interface DashboardSelectorProps {
@@ -25,6 +30,8 @@ interface DashboardSelectorProps {
 	onImport: (file: File) => void;
 	onDelete: () => void;
 	canDelete?: boolean;
+	onExportPNG: () => void;
+	onExportPDF: () => void;
 }
 
 export default function DashboardSelector({
@@ -36,6 +43,8 @@ export default function DashboardSelector({
 	onImport,
 	onDelete,
 	canDelete,
+	onExportPNG,
+	onExportPDF,
 }: DashboardSelectorProps) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -75,6 +84,17 @@ export default function DashboardSelector({
 				</Tooltip>
 			)}
 
+			<Tooltip title="Экспорт в PDF">
+			  <IconButton onClick={onExportPDF}>
+				<PictureAsPdfIcon />
+			  </IconButton>
+			</Tooltip>
+			<Tooltip title="Экспорт в PNG">
+			  <IconButton onClick={onExportPNG}>
+				<ImageIcon />
+			  </IconButton>
+
+			</Tooltip>
 			<input
 				ref={inputRef}
 				type="file"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 import ContentStack from '@/components/Layout/ContentStack';
 import DashboardSelector from '@/components/Dashboards/DashboardSelector';
@@ -23,6 +23,9 @@ import {
 import ShareIcon from '@mui/icons-material/Share';
 import { Dashboard, DashboardWidget } from '@/types/dashboards';
 
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 export default function DashboardsPage() {
@@ -39,6 +42,8 @@ export default function DashboardsPage() {
 	const [configWidget, setConfigWidget] = useState<DashboardWidget | null>(null);
 	const [createOpen, setCreateOpen] = useState(false);
 	const [shareOpen, setShareOpen] = useState(false);
+
+	const exportRef = useRef<HTMLDivElement>(null);
 
 	const active = dashboards.find((d) => d._id === activeId);
 
@@ -232,6 +237,26 @@ export default function DashboardsPage() {
 		}
 	};
 
+	const handleExportPNG = async () => {
+	  if (!exportRef.current || !active) return;
+	  const canvas = await html2canvas(exportRef.current);
+	  const link = document.createElement('a');
+	  link.download = `${active.title}.png`;
+	  link.href = canvas.toDataURL();
+	  link.click();
+	};
+
+	const handleExportPDF = async () => {
+	  if (!exportRef.current || !active) return;
+	  const canvas = await html2canvas(exportRef.current);
+	  const imgData = canvas.toDataURL('image/png');
+	  const pdf = new jsPDF('l', 'mm', 'a4');
+	  const pdfW = pdf.internal.pageSize.getWidth();
+	  const pdfH = (canvas.height * pdfW) / canvas.width;
+	  pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+	  pdf.save(`${active.title}.pdf`);
+	};
+
 	const mergedWidgets = (active?.widgets || []).map((w) => ({
 		...w,
 		config: sessionConfigs[w.id]
@@ -265,6 +290,8 @@ export default function DashboardsPage() {
 					onImport={handleImport}
 					onDelete={handleDelete}
 					canDelete={canDelete}
+					onExportPNG={handleExportPNG}
+					onExportPDF={handleExportPDF}
 				/>
 				{active && !active.is_template && (
 					<Tooltip title="Поделиться">
@@ -295,15 +322,17 @@ export default function DashboardsPage() {
 			)}
 
 			{active && mergedWidgets.length > 0 && (
-				<DashboardGrid
-					widgets={mergedWidgets}
-					mode={mode}
-					onLayoutChange={handleLayoutChange}
-					onRemove={handleRemove}
-					onConfig={(id) =>
-						setConfigWidget(mergedWidgets.find((w) => w.id === id) || null)
-					}
-				/>
+				<div ref={exportRef}>
+					<DashboardGrid
+						widgets={mergedWidgets}
+						mode={mode}
+						onLayoutChange={handleLayoutChange}
+						onRemove={handleRemove}
+						onConfig={(id) =>
+							setConfigWidget(mergedWidgets.find((w) => w.id === id) || null)
+						}
+					/>
+				</div>
 			)}
 
 			<WidgetConfigDialog
