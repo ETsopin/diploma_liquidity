@@ -66,16 +66,6 @@ overflow: 'auto',
 						</Typography>
 					</Stack>
 					<Stack direction="row">
-						{onConfig && (
-							<Tooltip title="Настроить">
-								<IconButton
-									size="small"
-									onClick={() => onConfig(widget.id)}
-								>
-									<SettingsIcon fontSize="small" />
-								</IconButton>
-							</Tooltip>
-						)}
 						{onRemove && (
 							<Tooltip title="Удалить">
 								<IconButton

@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, Int32 } from 'mongodb';
 import clientPromise from './mongodb';
 
 import { Dashboard, DashboardWidget } from '@/types/dashboards';
@@ -143,7 +143,17 @@ export const updateDashboard = async (
 
 	if (data.title !== undefined) update.title = data.title;
 	if (data.description !== undefined) update.description = data.description;
-	if (data.widgets !== undefined) update.widgets = data.widgets;
+	if (data.widgets !== undefined) {
+		update.widgets = data.widgets.map((w) => ({
+			...w,
+			layout: {
+				x: new Int32(w.layout.x),
+				y: new Int32(w.layout.y),
+				w: new Int32(w.layout.w),
+				h: new Int32(w.layout.h),
+			},
+		}));
+	}
 
 	const result = await db
 		.collection('dashboards')

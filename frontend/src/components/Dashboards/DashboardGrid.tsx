@@ -1,9 +1,13 @@
-import GridLayout from 'react-grid-layout';
+import GridLayout, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
+
+import { useRef } from 'react';
 
 import WidgetWrapper from './WidgetWrapper';
 import { WIDGET_REGISTRY } from './widgets/registry';
 import { DashboardWidget } from '@/types/dashboards';
+
+const ResponsiveGridLayout = WidthProvider(GridLayout);
 
 interface DashboardGridProps {
 	widgets: DashboardWidget[];
@@ -20,6 +24,8 @@ export default function DashboardGrid({
 	onRemove,
 	onConfig,
 }: DashboardGridProps) {
+	const mounted = useRef(false);
+
 	const layout = widgets.map((w) => ({
 		i: w.id,
 		x: w.layout.x,
@@ -28,21 +34,24 @@ export default function DashboardGrid({
 		h: w.layout.h,
 	}));
 
+	console.log('[DashboardGrid] layout:', JSON.stringify(layout));
+
 	const handleLayoutChange = (newLayout: any[]) => {
+		if (!mounted.current) {
+			mounted.current = true;
+			return;
+		}
 		const updated = widgets.map((w) => {
 			const item = newLayout.find((l: any) => l.i === w.id);
 			return item
-				? {
-						...w,
-						layout: { x: item.x, y: item.y, w: item.w, h: item.h },
-				  }
+				? { ...w, layout: { x: item.x, y: item.y, w: item.w, h: item.h } }
 				: w;
 		});
 		onLayoutChange(updated);
 	};
 
 	return (
-		<GridLayout
+		<ResponsiveGridLayout
 			className="layout"
 			layout={layout}
 			cols={12}
@@ -50,7 +59,7 @@ export default function DashboardGrid({
 			onLayoutChange={handleLayoutChange}
 			isDraggable={mode === 'edit'}
 			isResizable={mode === 'edit'}
-			compactType="vertical"
+			compactType={null}
 			draggableHandle=".drag-handle"
 		>
 			{widgets.map((w) => {
@@ -72,6 +81,6 @@ export default function DashboardGrid({
 					</div>
 				);
 			})}
-		</GridLayout>
+		</ResponsiveGridLayout>
 	);
 }

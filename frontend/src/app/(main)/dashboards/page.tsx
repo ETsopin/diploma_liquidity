@@ -74,11 +74,12 @@ export default function DashboardsPage() {
 			if (saveTimer) clearTimeout(saveTimer);
 			saveTimer = setTimeout(async () => {
 				try {
-					await fetch(`/api/dashboards/${activeId}`, {
+					const res = await fetch(`/api/dashboards/${activeId}`, {
 						method: 'PUT',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({ widgets }),
 					});
+					if (!res.ok) console.error('Auto-save failed', await res.text());
 				} catch (e) {
 					console.error('Auto-save failed', e);
 				}
@@ -105,11 +106,14 @@ export default function DashboardsPage() {
 		const def = WIDGET_REGISTRY[type];
 		if (!def) return;
 
+		const maxY = active.widgets.reduce(
+			(max, w) => Math.max(max, w.layout.y + w.layout.h), 0
+		);
 		const newWidget: DashboardWidget = {
 			id: crypto.randomUUID(),
 			type: type as any,
 			title: def.label,
-			layout: { x: 0, y: Infinity, w: def.defaultSize.w, h: def.defaultSize.h },
+			layout: { x: 0, y: maxY, w: def.defaultSize.w, h: def.defaultSize.h },
 			config: { ...def.defaultConfig },
 		};
 
