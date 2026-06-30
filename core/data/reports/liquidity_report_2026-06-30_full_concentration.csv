@@ -1,0 +1,26 @@
+﻿"calculation_id","category","counterparty_code","counterparty_name","counterparty_type","bucket_code","bucket_name","amount_rub","share_pct"
+4,"asset","CORP001","ТехноСтрой","corporate","ON_DEMAND","До востребования",45015000000.0,78.649
+4,"asset","CBR","ЦБ РФ","cbr","ON_DEMAND","До востребования",2700000000.0,4.717
+4,"asset","CBR","ЦБ РФ","cbr","D181_365","181–365 дней",2000000000.0,3.494
+4,"asset","PHYS001","Физлица","individual","OVER_1Y","Свыше 1 года",1900000000.0,3.32
+4,"asset","LKOH","ЛУКОЙЛ","corporate","D181_365","181–365 дней",1500000000.0,2.621
+4,"asset","GAZP","Газпром","corporate","ON_DEMAND","До востребования",1000000000.0,1.747
+4,"asset","ROSNFT","Роснефть","corporate","ON_DEMAND","До востребования",600000000.0,1.048
+4,"asset","GAZP","Газпром","corporate","D31_90","31–90 дней",600000000.0,1.048
+4,"asset","PHYS001","Физлица","individual","ON_DEMAND","До востребования",500000000.0,0.874
+4,"asset","SBER","Сбербанк","bank","ON_DEMAND","До востребования",400000000.0,0.699
+4,"asset","PHYS001","Физлица","individual","D1","1 день",360000000.0,0.629
+4,"asset","VTB","ВТБ","bank","ON_DEMAND","До востребования",300000000.0,0.524
+4,"asset","ALFA","Альфа-Банк","bank","ON_DEMAND","До востребования",200000000.0,0.349
+4,"asset","CORP002","АгроПром","corporate","ON_DEMAND","До востребования",160000000.0,0.28
+4,"liability","PHYS001","Физлица","individual","D8_30","8–30 дней",35820000000.0,66.878
+4,"liability","PHYS001","Физлица","individual","ON_DEMAND","До востребования",9600000000.0,17.924
+4,"liability","CORP001","ТехноСтрой","corporate","OVER_1Y","Свыше 1 года",2000000000.0,3.734
+4,"liability","GAZP","Газпром","corporate","ON_DEMAND","До востребования",1700000000.0,3.174
+4,"liability","LKOH","ЛУКОЙЛ","corporate","ON_DEMAND","До востребования",1160000000.0,2.166
+4,"liability","CORP001","ТехноСтрой","corporate","D181_365","181–365 дней",1000000000.0,1.867
+4,"liability","VTB","ВТБ","bank","ON_DEMAND","До востребования",1000000000.0,1.867
+4,"liability","SBER","Сбербанк","bank","ON_DEMAND","До востребования",600000000.0,1.12
+4,"liability","ALFA","Альфа-Банк","bank","ON_DEMAND","До востребования",400000000.0,0.747
+4,"liability","CORP001","ТехноСтрой","corporate","ON_DEMAND","До востребования",160000000.0,0.299
+4,"liability","CORP002","АгроПром","corporate","ON_DEMAND","До востребования",120000000.0,0.224

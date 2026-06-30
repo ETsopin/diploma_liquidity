@@ -721,8 +721,6 @@ class ReportGenerator:
         if gap_df.empty and conc_df.empty:
             raise RuntimeError(
                 f"Нет данных за {self.report_date}. "
-                "Сначала запусти ETL и расчётное ядро: "
-                "`uv run etl` и `uv run calculate --date ...`"
             )
 
         base_name = (

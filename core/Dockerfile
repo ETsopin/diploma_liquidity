@@ -2,9 +2,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Системные зависимости (psycopg2-binary не требует libpq-dev, но оставляем на случай)
+# Системные зависимости
+# fonts-dejavu-core — TTF-шрифт с кириллицей для генерации PDF-отчётов (ReportLab)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем uv
