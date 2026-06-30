@@ -168,14 +168,14 @@ export default function ConcentrationTrendLine() {
 	}, [data]);
 
 	return (
-		<Stack spacing={2} sx={{ width: '100%' }}>
+		<Stack spacing={2} sx={{ width: '100%', height: '100%' }}>
 			{loading && <CircularProgress />}
 			{error && <Alert severity="error">{error}</Alert>}
 			{!loading && !error && data.length === 0 && (
 				<Alert severity="info">Нет данных</Alert>
 			)}
 			{!loading && !error && data.length > 1 && (
-				<Paper variant="outlined" sx={{ p: 2 }}>
+				<Paper variant="outlined" sx={{ p: 2, height: '100%' }}>
 					<Stack spacing={2}>
 						<Stack
 							direction="row"

@@ -56,6 +56,8 @@ overflow: 'auto',
 						borderColor: 'divider',
 						bgcolor: 'action.hover',
 						cursor: 'grab',
+						zIndex: 10,
+						position: 'relative',
 					}}
 					className="drag-handle"
 				>
@@ -80,7 +82,7 @@ overflow: 'auto',
 				</Stack>
 			)}
 
-			<Stack sx={{ flex: 1, overflow: 'hidden', p: 1 }}>
+			<Stack sx={{ flex: 1, overflow: 'auto', p: 1 }}>
 				{children}
 			</Stack>
 		</Paper>

@@ -2,6 +2,7 @@ import GridLayout, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 
 import { useRef } from 'react';
+import { useTheme } from '@mui/material/styles';
 
 import WidgetWrapper from './WidgetWrapper';
 import { WIDGET_REGISTRY } from './widgets/registry';
@@ -25,6 +26,7 @@ export default function DashboardGrid({
 	onConfig,
 }: DashboardGridProps) {
 	const mounted = useRef(false);
+	const theme = useTheme();
 
 	const layout = widgets.map((w) => {
 		const def = WIDGET_REGISTRY[w.type];
@@ -54,36 +56,45 @@ export default function DashboardGrid({
 	};
 
 	return (
-		<ResponsiveGridLayout
-			className="layout"
-			layout={layout}
-			cols={12}
-			rowHeight={100}
-			onLayoutChange={handleLayoutChange}
-			isDraggable={mode === 'edit'}
-			isResizable={mode === 'edit'}
-			compactType={null}
-			draggableHandle=".drag-handle"
-		>
-			{widgets.map((w) => {
-				const def = WIDGET_REGISTRY[w.type];
-				if (!def) return null;
+		<>
+			<style>{`
+				.react-grid-placeholder {
+					background: ${theme.palette.tertiary.main} !important;
+					opacity: 0.3;
+				}
+			`}</style>
+			<ResponsiveGridLayout
+				className="layout"
+				layout={layout}
+				cols={12}
+				rowHeight={100}
+				onLayoutChange={handleLayoutChange}
+				isDraggable={mode === 'edit'}
+				isResizable={mode === 'edit'}
+				compactType={null}
+				preventCollision
+				draggableHandle=".drag-handle"
+			>
+				{widgets.map((w) => {
+					const def = WIDGET_REGISTRY[w.type];
+					if (!def) return null;
 
-				const WidgetComponent = def.component;
+					const WidgetComponent = def.component;
 
-				return (
-					<div key={w.id}>
-						<WidgetWrapper
-							widget={w}
-							mode={mode}
-							onRemove={mode === 'edit' ? onRemove : undefined}
-							onConfig={mode === 'edit' ? onConfig : undefined}
-						>
-							<WidgetComponent {...w.config} />
-						</WidgetWrapper>
-					</div>
-				);
-			})}
-		</ResponsiveGridLayout>
+					return (
+						<div key={w.id}>
+							<WidgetWrapper
+								widget={w}
+								mode={mode}
+								onRemove={mode === 'edit' ? onRemove : undefined}
+								onConfig={mode === 'edit' ? onConfig : undefined}
+							>
+								<WidgetComponent {...w.config} />
+							</WidgetWrapper>
+						</div>
+					);
+				})}
+			</ResponsiveGridLayout>
+		</>
 	);
 }
